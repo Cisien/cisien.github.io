@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Guide: MeshCore RS232 Bridge Node</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap');
+
+  :root {
+    --bg: #0c1117; --bg-card: #151c25; --bg-card-alt: #1a2332; --border: #2a3a4e;
+    --text: #c8d6e5; --text-dim: #6b7f96; --text-bright: #e8f0f8;
+    --accent-summit: #ff6b4a; --accent-bridge: #f5c542; --accent-local: #4ecdc4; --accent-companion: #7c9cff;
+    --freq-high: #ff6b4a; --freq-low: #4ecdc4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Source Serif 4', Georgia, serif; line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+  h1 { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.3rem; letter-spacing: -0.5px; }
+  .subtitle { font-size: 1.05rem; color: var(--text-dim); margin-bottom: 2rem; font-style: italic; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.7rem; margin-top: 3rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .tldr-box { background: linear-gradient(135deg, #0f1a1f 0%, #151c25 100%); border: 1px solid rgba(78,205,196,0.3); border-left: 4px solid #4ecdc4; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 3rem; }
+  .tldr-box h3 { font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
+  .tldr-box p { font-size: 0.95rem; color: var(--text-bright); line-height: 1.8; }
+  .tldr-box p + p { margin-top: 0.6rem; }
+  .prose { font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
+  .prose em { color: var(--text-bright); font-style: italic; }
+  .prose strong { color: var(--text-bright); }
+  .prose a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
+  .prose a:hover { border-bottom-color: var(--accent-local); }
+  .warning-box { background: linear-gradient(135deg, #1a1a10 0%, #151c25 100%); border: 1px solid rgba(245,197,66,0.3); border-left: 4px solid #f5c542; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
+  .warning-box h3 { font-family: 'JetBrains Mono', monospace; color: #f5c542; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
+  .warning-box p { font-size: 0.9rem; line-height: 1.7; }
+  .info-box { background: linear-gradient(135deg, #0f1520 0%, #151c25 100%); border: 1px solid rgba(124,156,255,0.3); border-left: 4px solid #7c9cff; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
+  .info-box h3 { font-family: 'JetBrains Mono', monospace; color: #7c9cff; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
+  .info-box p { font-size: 0.9rem; line-height: 1.7; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+  .pilot-box { background: linear-gradient(135deg, #0f1a15 0%, #151c25 100%); border: 1px solid rgba(78,205,196,0.25); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
+  .pilot-box h3 { font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; margin-bottom: 1rem; }
+  .pilot-step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+  .pilot-num { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; color: rgba(78,205,196,0.3); flex-shrink: 0; width: 2rem; text-align: center; line-height: 1.3; }
+  .pilot-text { font-size: 0.9rem; line-height: 1.6; }
+  .pilot-text strong { color: var(--text-bright); }
+  .bom-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.88rem; }
+  .bom-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); text-align: left; padding: 0.8rem 1rem; border-bottom: 2px solid var(--border); }
+  .bom-table td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .bom-table tr:hover td { background: rgba(78,205,196,0.03); }
+  .bom-table .part-name { color: var(--text-bright); font-weight: 600; }
+  .bom-table .part-link { color: var(--accent-local); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+  .bom-table .part-link:hover { text-decoration: underline; }
+  .bom-table .qty { font-family: 'JetBrains Mono', monospace; color: var(--accent-bridge); text-align: center; }
+  .bom-table .price { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .bom-table .note { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.3rem; }
+  .bom-total { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent-local); padding: 0.8rem 1rem; border-top: 2px solid var(--border); }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.15); padding: 0.15em 0.4em; border-radius: 3px; color: var(--accent-local); }
+  .code-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; margin: 1rem 0 1.5rem; overflow-x: auto; }
+  .code-block pre { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.6; color: var(--text-bright); white-space: pre; }
+  .code-block .comment { color: var(--text-dim); }
+  .code-block .cmd { color: var(--accent-local); }
+  .code-block .val { color: var(--accent-bridge); }
+  .freq-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 3px; }
+  .freq-tag.backhaul { background: rgba(255,107,74,0.15); color: #ff6b4a; border: 1px solid rgba(255,107,74,0.3); }
+  .freq-tag.local { background: rgba(78,205,196,0.15); color: #4ecdc4; border: 1px solid rgba(78,205,196,0.3); }
+  .wiring-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.88rem; }
+  .wiring-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); text-align: left; padding: 0.6rem 1rem; border-bottom: 2px solid var(--border); }
+  .wiring-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  .wiring-table .pin-r1 { color: var(--accent-summit); }
+  .wiring-table .pin-r2 { color: var(--accent-local); }
+  .wiring-table .pin-wire { color: var(--accent-bridge); }
+  .impact-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0; }
+  @media (max-width: 700px) { .impact-row { grid-template-columns: 1fr; } .bom-table { font-size: 0.8rem; } .bom-table td, .bom-table th { padding: 0.6rem 0.5rem; } }
+  .impact-stat { text-align: center; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+  .impact-stat .number { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: #4ecdc4; display: block; }
+  .impact-stat .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; display: block; }
+  .footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-dim); text-align: center; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Building an RS232 Bridge Node</h1>
+  <p class="subtitle">Dual-radio bridge assembly guide for connecting backhaul and local mesh layers</p>
+
+  <div class="tldr-box">
+    <h3>WHAT YOU'RE BUILDING</h3>
+    <p>A bridge node is two MeshCore radios connected via a serial (UART) cable. One radio talks to the backhaul network on <span class="freq-tag backhaul">911.500 MHz</span> using a directional antenna. The other serves the local mesh on <span class="freq-tag local">910.525 MHz</span> using an omni. MeshCore's native RS232 bridge feature handles all the routing — <strong>no custom firmware required.</strong></p>
+    <p>Both radios run standard MeshCore repeater firmware. The bridge delay makes the serial hop behave like a normal RF relay to the rest of the mesh. Companions and local repeaters are completely unaware the bridge exists.</p>
+  </div>
+
+  <div class="impact-row">
+    <div class="impact-stat">
+      <span class="number">~$150</span>
+      <span class="label">Estimated Total Cost</span>
+    </div>
+    <div class="impact-stat">
+      <span class="number">2</span>
+      <span class="label">RAK4631 Radios</span>
+    </div>
+    <div class="impact-stat">
+      <span class="number">~1 hr</span>
+      <span class="label">Assembly Time</span>
+    </div>
+  </div>
+
+  <div class="section-label">Bill of Materials</div>
+
+  <table class="bom-table">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th style="text-align:center;">Qty</th>
+        <th>Notes</th>
+        <th style="text-align:right;">Est. Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="part-name">RAK4631 WisBlock Core Module (US915)</div>
+          <a class="part-link" href="https://store.rokland.com/products/rak-wireless-rak4631-nordic-nrf52840-ble-core-module-for-lorawan-with-lora-sx1262" target="_blank">Rokland — SKU 116000</a>
+        </td>
+        <td class="qty">2</td>
+        <td>nRF52840 + SX1262. Ultra-low power. This is the brain + radio of each side.</td>
+        <td class="price">$39.94</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">RAK19003 WisBlock Mini Base Board</div>
+          <a class="part-link" href="https://store.rokland.com/products/rak-wireless-wisblock-mini-base-board-rak19003-ver-b-pid-306024" target="_blank">Rokland — PID 110035</a>
+        </td>
+        <td class="qty">2</td>
+        <td>Compact base board. Has UART/GPIO breakout, battery connector, and solar input. The smaller form factor keeps the enclosure compact.</td>
+        <td class="price">$27.94</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">IPEX/u.FL to N-Female Bulkhead Pigtail</div>
+          <a class="part-link" href="https://www.amazon.com/s?k=ipex+u.fl+to+n+female+bulkhead+pigtail" target="_blank">Amazon — IPEX to N-Female pigtails</a>
+        </td>
+        <td class="qty">2</td>
+        <td>Short pigtail (~6–12") from the RAK4631's u.FL LoRa port to an N-female bulkhead on the enclosure. Mounts through the enclosure wall so the cable run connects from outside.</td>
+        <td class="price">~$10</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">Proxicast 10 ft N-Male to N-Male CFD-400 Low-Loss Cable</div>
+          <a class="part-link" href="https://www.amazon.com/Proxicast-Premium-Low-Loss-Routers-Arrester/dp/B0CX24R6YV" target="_blank">Amazon — Proxicast ANT-180-401-10</a>
+        </td>
+        <td class="qty">1–2</td>
+        <td>Premium 400-series low-loss coax, N-male on both ends. Gold-plated pins, solid copper-clad aluminum core. Rated for outdoor use. Connects from the IPEX-to-N bulkhead on the enclosure to the antenna's N-female port. Available in multiple lengths — get the shortest run that reaches.</td>
+        <td class="price">~$25–35</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">915 MHz Omni Antenna (local mesh)</div>
+          <a class="part-link" href="https://store.rokland.com/collections/802-11ah-wi-fi-halow" target="_blank">Rokland — LoRa / 915 MHz antennas</a>
+        </td>
+        <td class="qty">1</td>
+        <td>For the local mesh radio. A 3–6 dBi omni is fine for most sites. N-female connector. Choose based on your local coverage needs.</td>
+        <td class="price">~$10–30</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">900 MHz 9 dBi Directional Panel Antenna (backhaul)</div>
+          <a class="part-link" href="https://www.ebay.com/itm/381175132775" target="_blank">eBay — Antenna World COM-9028PN</a>
+        </td>
+        <td class="qty">1</td>
+        <td>902–928 MHz panel antenna with ~9 dBi gain, N-female connector. Solid ground plane provides good front-to-back ratio for co-site isolation. Made in USA. Compact form factor, mounts easily on a mast or wall bracket.</td>
+        <td class="price">~$46</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">Dupont Jumper Wires (Female-Female)</div>
+          <a class="part-link" href="https://www.amazon.com/s?k=dupont+jumper+wires+female+female" target="_blank">Amazon — various</a>
+        </td>
+        <td class="qty">3</td>
+        <td>For the UART bridge wiring (TX→RX, RX→TX, GND→GND). Short lengths — 10–15 cm is plenty.</td>
+        <td class="price">~$5</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">3.7V LiPo Battery (JST 2-pin connector)</div>
+        </td>
+        <td class="qty">1–2</td>
+        <td>One per base board, or share power. Check JST connector polarity — RAK uses a specific pinout. Rokland batteries are verified compatible.</td>
+        <td class="price">~$8–15</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">5V Solar Panel (JST connector)</div>
+        </td>
+        <td class="qty">1</td>
+        <td>Optional but recommended for remote deployments. 5V panel connects to the RAK19003's solar input. 1–2W panel is adequate for dual nRF52 nodes.</td>
+        <td class="price">~$10–15</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="part-name">Weatherproof Enclosure (IP65+)</div>
+          <a class="part-link" href="https://www.amazon.com/s?k=ip67+junction+box+waterproof+enclosure" target="_blank">Amazon — IP67 enclosures</a>
+        </td>
+        <td class="qty">1</td>
+        <td>Needs to fit two RAK19003 boards plus wiring. ~150×100×75mm minimum. Drill holes for N-type bulkhead connectors (one per antenna) or use cable glands for the pigtail feedthroughs.</td>
+        <td class="price">~$10–15</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="bom-total">Estimated total: ~$130–$180 depending on cable lengths and omni antenna choice</div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Architecture Overview</div>
+
+  <div style="margin: 2rem 0;">
+    <svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
+      <!-- Backhaul zone -->
+      <rect x="0" y="0" width="1000" height="140" fill="rgba(255,107,74,0.03)"/>
+      <rect x="0" y="140" width="1000" height="180" fill="rgba(78,205,196,0.02)"/>
+      <line x1="0" y1="140" x2="1000" y2="140" stroke="#2a3a4e" stroke-width="1" stroke-dasharray="6,4"/>
+
+      <rect x="15" y="8" width="200" height="24" rx="4" fill="rgba(255,107,74,0.1)" stroke="rgba(255,107,74,0.3)"/>
+      <text x="25" y="25" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">BACKHAUL — 911.500 MHz</text>
+
+      <rect x="15" y="148" width="210" height="24" rx="4" fill="rgba(78,205,196,0.1)" stroke="rgba(78,205,196,0.3)"/>
+      <text x="25" y="165" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">LOCAL MESH — 910.525 MHz</text>
+
+      <!-- Summit nodes -->
+      <circle cx="200" cy="70" r="10" fill="#ff6b4a" opacity="0.9"/>
+      <text x="200" y="100" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">SUMMIT</text>
+
+      <circle cx="800" cy="70" r="10" fill="#ff6b4a" opacity="0.9"/>
+      <text x="800" y="100" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">SUMMIT</text>
+
+      <!-- Backhaul link lines -->
+      <line x1="210" y1="70" x2="440" y2="70" stroke="#ff6b4a" stroke-width="1.5" opacity="0.4" stroke-dasharray="4,3"/>
+      <line x1="560" y1="70" x2="790" y2="70" stroke="#ff6b4a" stroke-width="1.5" opacity="0.4" stroke-dasharray="4,3"/>
+
+      <!-- Bridge node box -->
+      <rect x="420" y="40" width="160" height="240" rx="8" fill="var(--bg-card)" stroke="var(--accent-bridge)" stroke-width="1.5" opacity="0.9"/>
+      <text x="500" y="62" fill="#f5c542" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" font-weight="700">BRIDGE NODE</text>
+
+      <!-- Radio 1 (backhaul) -->
+      <rect x="440" y="75" width="120" height="44" rx="4" fill="rgba(255,107,74,0.08)" stroke="rgba(255,107,74,0.3)"/>
+      <text x="500" y="93" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle" font-weight="600">RADIO 1 — R1</text>
+      <text x="500" y="109" fill="#c8d6e5" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">911.500 MHz</text>
+
+      <!-- Serial link -->
+      <line x1="500" y1="119" x2="500" y2="150" stroke="#f5c542" stroke-width="2"/>
+      <rect x="462" y="130" width="76" height="18" rx="3" fill="rgba(245,197,66,0.1)" stroke="rgba(245,197,66,0.3)"/>
+      <text x="500" y="143" fill="#f5c542" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle" font-weight="600">RS-232 UART</text>
+
+      <!-- Radio 2 (local) -->
+      <rect x="440" y="155" width="120" height="44" rx="4" fill="rgba(78,205,196,0.08)" stroke="rgba(78,205,196,0.3)"/>
+      <text x="500" y="173" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle" font-weight="600">RADIO 2 — R2</text>
+      <text x="500" y="189" fill="#c8d6e5" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">910.525 MHz</text>
+
+      <!-- Antenna labels -->
+      <line x1="440" y1="97" x2="380" y2="70" stroke="#ff6b4a" stroke-width="1" opacity="0.5"/>
+      <text x="370" y="65" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="7" text-anchor="end">PANEL ANT ↑</text>
+
+      <line x1="560" y1="177" x2="620" y2="200" stroke="#4ecdc4" stroke-width="1" opacity="0.5"/>
+      <text x="630" y="205" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="7">OMNI ↓</text>
+
+      <!-- Local mesh nodes -->
+      <circle cx="350" cy="240" r="6" fill="#4ecdc4" opacity="0.7"/>
+      <circle cx="500" cy="260" r="6" fill="#4ecdc4" opacity="0.7"/>
+      <circle cx="650" cy="240" r="6" fill="#4ecdc4" opacity="0.7"/>
+      <text x="350" y="260" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="7" text-anchor="middle">RPT</text>
+      <text x="500" y="280" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="7" text-anchor="middle">RPT</text>
+      <text x="650" y="260" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="7" text-anchor="middle">RPT</text>
+
+      <!-- Local mesh lines -->
+      <line x1="500" y1="199" x2="350" y2="234" stroke="#4ecdc4" stroke-width="0.8" opacity="0.3"/>
+      <line x1="500" y1="199" x2="500" y2="254" stroke="#4ecdc4" stroke-width="0.8" opacity="0.3"/>
+      <line x1="500" y1="199" x2="650" y2="234" stroke="#4ecdc4" stroke-width="0.8" opacity="0.3"/>
+
+      <!-- Companions -->
+      <circle cx="280" cy="290" r="4" fill="#7c9cff" opacity="0.6"/>
+      <circle cx="420" cy="300" r="4" fill="#7c9cff" opacity="0.6"/>
+      <circle cx="580" cy="300" r="4" fill="#7c9cff" opacity="0.6"/>
+      <circle cx="720" cy="290" r="4" fill="#7c9cff" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Wiring the UART Bridge</div>
+
+  <p class="prose">The two RAK19003 base boards are connected via three wires using the UART/GPIO header pins. This is a cross-wired serial connection — one radio's TX goes to the other's RX, and vice versa. Both boards share a common ground.</p>
+
+  <table class="wiring-table">
+    <thead>
+      <tr>
+        <th>Radio 1 (Backhaul)</th>
+        <th>Wire</th>
+        <th>Radio 2 (Local Mesh)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="pin-r1">TX (Pin TX1)</td>
+        <td class="pin-wire">→ wire →</td>
+        <td class="pin-r2">RX (Pin RX1)</td>
+      </tr>
+      <tr>
+        <td class="pin-r1">RX (Pin RX1)</td>
+        <td class="pin-wire">← wire ←</td>
+        <td class="pin-r2">TX (Pin TX1)</td>
+      </tr>
+      <tr>
+        <td class="pin-r1">GND</td>
+        <td class="pin-wire">— wire —</td>
+        <td class="pin-r2">GND</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box">
+    <h3>⚠ VOLTAGE LEVELS</h3>
+    <p>Both RAK4631 modules run at 3.3V logic, so the UART connection is direct — no level shifter needed. Do <strong>not</strong> connect to a true RS-232 voltage level device (±12V) without a level converter. The "RS232" name in MeshCore refers to the serial protocol, not the voltage standard.</p>
+  </div>
+
+  <div class="info-box">
+    <h3>ℹ PIN REFERENCE</h3>
+    <p>On the RAK19003 mini base board, the UART pins are available on the IO header. Refer to the <a href="https://docs.rakwireless.com/Product-Categories/WisBlock/RAK19003/Datasheet/" target="_blank" style="color: #7c9cff;">RAK19003 datasheet</a> for the exact header pinout. The TX1 and RX1 pins correspond to the nRF52840's hardware UART1. Ensure you're using the correct UART — MeshCore's bridge uses the serial port specified at compile time via the <code>WITH_RS232_BRIDGE</code> flag.</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Flashing MeshCore Firmware</div>
+
+  <p class="prose">Both radios run standard MeshCore repeater firmware. Flash each RAK4631 using the <a href="https://flasher.meshcore.co.uk/" target="_blank">MeshCore Flasher</a> web tool or via PlatformIO if building from source. Select the <strong>Simple Repeater</strong> firmware for your board type (RAK4631 / nRF52).</p>
+
+  <p class="prose">If building from source, ensure the <code>WITH_RS232_BRIDGE</code> build flag is enabled in your <code>platformio.ini</code> for the radio that will <em>send</em> bridged packets out over serial. For bidirectional bridging, both radios need this flag enabled.</p>
+
+  <div class="pilot-box">
+    <h3>Flash Procedure (per radio)</h3>
+    <div class="pilot-step">
+      <div class="pilot-num">1</div>
+      <div class="pilot-text"><strong>Connect the RAK4631 via USB-C.</strong> The board should appear as a USB mass storage device (if using the UF2 bootloader) or as a serial port.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">2</div>
+      <div class="pilot-text"><strong>Flash the repeater firmware.</strong> Use the MeshCore Flasher at <a href="https://flasher.meshcore.co.uk/" target="_blank" style="color: #4ecdc4;">flasher.meshcore.co.uk</a> — select RAK4631, Simple Repeater, and follow the prompts. Alternatively, drag-and-drop the UF2 file onto the mass storage device.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">3</div>
+      <div class="pilot-text"><strong>Connect to the serial console</strong> (115200 baud) to configure. Use PuTTY, screen, minicom, or the MeshCore web config tool.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">4</div>
+      <div class="pilot-text"><strong>Repeat for the second radio.</strong> Both need to be flashed and configured independently before wiring them together.</div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Configuring Radio 1 — Backhaul</div>
+  <p class="prose">This radio connects to the backhaul network. Assume you've already configured the radio parameters (frequency, bandwidth, SF, TX power) per your community's backhaul settings. The commands below are <em>only</em> the bridge-specific configuration.</p>
+
+  <div class="code-block"><pre><span class="comment"># Connect via serial console at 115200 baud</span>
+<span class="comment"># Radio params assumed already set:</span>
+<span class="comment">#   set radio 911.500,62.5,12,5</span>
+<span class="comment">#   set name BRIDGE-WEST-BH</span>
+
+<span class="comment"># Enable the RS232 bridge</span>
+<span class="cmd">set bridge.enabled</span> <span class="val">on</span>
+
+<span class="comment"># Bridge received packets (from RF) out to serial</span>
+<span class="cmd">set bridge.source</span> <span class="val">rx</span>
+
+<span class="comment"># Set baud rate — must match Radio 2</span>
+<span class="cmd">set bridge.baud</span> <span class="val">115200</span>
+
+<span class="comment"># Add delay (ms) so the bridge behaves like an RF hop</span>
+<span class="cmd">set bridge.delay</span> <span class="val">500</span>
+
+<span class="comment"># Verify settings</span>
+<span class="cmd">get bridge.enabled</span>
+<span class="cmd">get bridge.source</span>
+<span class="cmd">get bridge.baud</span>
+<span class="cmd">get bridge.delay</span></pre></div>
+
+  <div class="section-label">Configuring Radio 2 — Local Mesh</div>
+  <p class="prose">This radio serves the local mesh pocket. Same bridge commands, just on the radio that's already configured for the local mesh frequency.</p>
+
+  <div class="code-block"><pre><span class="comment"># Connect via serial console at 115200 baud</span>
+<span class="comment"># Radio params assumed already set:</span>
+<span class="comment">#   set radio 910.525,62.5,12,5</span>
+<span class="comment">#   set name BRIDGE-WEST-LM</span>
+
+<span class="comment"># Enable the RS232 bridge</span>
+<span class="cmd">set bridge.enabled</span> <span class="val">on</span>
+
+<span class="comment"># Bridge received packets (from RF) out to serial</span>
+<span class="cmd">set bridge.source</span> <span class="val">rx</span>
+
+<span class="comment"># Set baud rate — must match Radio 1</span>
+<span class="cmd">set bridge.baud</span> <span class="val">115200</span>
+
+<span class="comment"># Add delay (ms) so the bridge behaves like an RF hop</span>
+<span class="cmd">set bridge.delay</span> <span class="val">500</span>
+
+<span class="comment"># Verify settings</span>
+<span class="cmd">get bridge.enabled</span>
+<span class="cmd">get bridge.source</span>
+<span class="cmd">get bridge.baud</span>
+<span class="cmd">get bridge.delay</span></pre></div>
+
+  <div class="info-box">
+    <h3>ℹ ON BRIDGE DELAY</h3>
+    <p>The <code>bridge.delay</code> value introduces artificial latency so the mesh treats the bridge as a normal RF hop for timing purposes. 500ms is a reasonable starting point. If you experience retransmission issues, increase it. If responsiveness matters more than timing accuracy, you can decrease it — but going below ~200ms may cause the mesh to not count it as a hop.</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Antenna Placement &amp; Co-Site Considerations</div>
+
+  <p class="prose">With both radios operating within ~1 MHz of each other (910.525 and 911.500), co-site interference is a real consideration. The two antennas need physical separation to prevent the backhaul radio from desensing the local mesh radio (and vice versa). Here's what helps:</p>
+
+  <p class="prose"><strong>Vertical separation</strong> is your primary isolation tool. Mount the directional (backhaul) antenna below the omni (local mesh), with as much vertical distance as the site allows. Even 2–3 meters makes a significant difference. The omni's radiation pattern has a null along its vertical axis, so getting the directional into that null zone minimizes coupling.</p>
+
+  <p class="prose"><strong>Channel separation</strong> works in your favor. At 62.5 kHz bandwidth with ~1 MHz of offset, the LoRa radio's channel filter provides meaningful adjacent-channel rejection — roughly 30+ dB at that spacing. This is usually sufficient when combined with modest physical separation.</p>
+
+  <p class="prose"><strong>Antenna front-to-back ratio</strong> is handled well by the recommended panel antenna. The COM-9028PN has a solid ground plane behind the radiating element, which naturally blocks energy from radiating backward toward the omni. This is one of the main advantages of a panel over a yagi or grid for co-site deployments — the flat metal backplane acts as a shield.</p>
+
+  <div class="warning-box">
+    <h3>⚠ FUTURE-PROOFING: 500 KHZ BANDWIDTH</h3>
+    <p>If the community moves to 500 kHz bandwidth, channel separation drops to ~3× the channel width. You'll need to be more aggressive with physical separation — plan for 3+ meters between antennas, or consider mounting them on separate mast points. At 62.5 kHz, most sites will work fine with minimal separation.</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Assembly Checklist</div>
+
+  <div class="pilot-box">
+    <h3>Step-by-Step Assembly</h3>
+    <div class="pilot-step">
+      <div class="pilot-num">1</div>
+      <div class="pilot-text"><strong>Seat the RAK4631 cores onto both RAK19003 base boards.</strong> The WisBlock connector is keyed — align the notch and press firmly until it clicks. Secure with the included screws.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">2</div>
+      <div class="pilot-text"><strong>Flash both radios individually via USB-C</strong> before wiring them together. Test each one on the serial console to confirm it boots and responds to commands.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">3</div>
+      <div class="pilot-text"><strong>Configure Radio 1 (backhaul)</strong> with the backhaul frequency and bridge settings as shown above. Verify with <code>show config</code> or equivalent.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">4</div>
+      <div class="pilot-text"><strong>Configure Radio 2 (local mesh)</strong> with the local mesh frequency and bridge settings. Verify configuration.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">5</div>
+      <div class="pilot-text"><strong>Wire the UART bridge.</strong> Connect TX1→RX1, RX1→TX1, and GND→GND between the two base boards using Dupont jumper wires. Double-check the cross-wiring — TX goes to RX, not TX to TX.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">6</div>
+      <div class="pilot-text"><strong>Connect IPEX-to-N pigtails</strong> to both RAK4631 LoRa u.FL connectors. Mount the N-female bulkhead end through the enclosure wall. From outside, connect the Proxicast N-male to N-male CFD-400 cable from the bulkhead to the antenna's N-female port. The full chain is: RAK4631 u.FL → IPEX pigtail → N-female bulkhead → N-male (cable) → N-male into antenna N-female.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">7</div>
+      <div class="pilot-text"><strong>Connect battery and (optionally) solar panel.</strong> Both boards can share a single battery if wired in parallel to both JST connectors, or run independently with separate batteries. Solar input goes to either board's solar connector.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">8</div>
+      <div class="pilot-text"><strong>Bench test before deployment.</strong> Power up both boards and monitor via serial console on Radio 1. Send a test message on the local mesh frequency from another node — you should see it arrive on Radio 2 and get bridged to Radio 1's serial output. If you have a node on the backhaul frequency, verify traffic flows both directions.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">9</div>
+      <div class="pilot-text"><strong>Seal the enclosure, mount antennas, and deploy.</strong> Ensure all cable glands and bulkhead connectors are weathertight. Mount the omni above the directional with maximum vertical separation.</div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Verification &amp; Troubleshooting</div>
+
+  <p class="prose"><strong>Bridge not forwarding packets?</strong> Confirm both radios have <code>bridge.enabled on</code> and matching baud rates. Check that the UART wiring is crossed (TX→RX) and not straight-through. A logic analyzer or USB-serial adapter on the bridge wires can confirm data is flowing.</p>
+
+  <p class="prose"><strong>Packets arriving but not being rebroadcast?</strong> Make sure both radios are running repeater firmware (not companion firmware). The bridge forwards raw packets to the serial port, but the receiving radio needs to be in repeater mode to rebroadcast them over RF.</p>
+
+  <p class="prose"><strong>Seeing duplicate messages or loops?</strong> MeshCore's mesh routing is designed to handle duplicate suppression, but if you're seeing obvious loops, check that the bridge delay is set appropriately. A delay that's too short may cause the mesh to not treat the bridge as a distinct hop.</p>
+
+  <p class="prose"><strong>One direction works but not the other?</strong> Bidirectional bridging requires both radios to have the bridge enabled. If only one side is enabled, traffic will only flow in one direction (mesh→serial on the enabled side). Ensure <code>bridge.enabled on</code> is set on <em>both</em> radios.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Quick Reference</div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;">
+    <div style="background: var(--bg-card); border: 1px solid rgba(255,107,74,0.3); border-radius: 8px; padding: 1.2rem;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #ff6b4a; font-weight: 600; margin-bottom: 0.8rem;">RADIO 1 — BACKHAUL</div>
+      <div style="font-size: 0.85rem; line-height: 1.8;">
+        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">911.500 MHz</span></div>
+        <div><span style="color: var(--text-dim);">Bandwidth:</span> <span style="color: var(--text-bright);">62.5 kHz</span></div>
+        <div><span style="color: var(--text-dim);">SF:</span> <span style="color: var(--text-bright);">12</span></div>
+        <div><span style="color: var(--text-dim);">Antenna:</span> <span style="color: var(--text-bright);">9 dBi Panel (COM-9028PN)</span></div>
+        <div><span style="color: var(--text-dim);">Bridge:</span> <span style="color: var(--text-bright);">Enabled, 115200 baud, 500ms delay</span></div>
+      </div>
+    </div>
+    <div style="background: var(--bg-card); border: 1px solid rgba(78,205,196,0.3); border-radius: 8px; padding: 1.2rem;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #4ecdc4; font-weight: 600; margin-bottom: 0.8rem;">RADIO 2 — LOCAL MESH</div>
+      <div style="font-size: 0.85rem; line-height: 1.8;">
+        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">910.525 MHz</span></div>
+        <div><span style="color: var(--text-dim);">Bandwidth:</span> <span style="color: var(--text-bright);">62.5 kHz</span></div>
+        <div><span style="color: var(--text-dim);">SF:</span> <span style="color: var(--text-bright);">12</span></div>
+        <div><span style="color: var(--text-dim);">Antenna:</span> <span style="color: var(--text-bright);">Omni (3–6 dBi)</span></div>
+        <div><span style="color: var(--text-dim);">Bridge:</span> <span style="color: var(--text-bright);">Enabled, 115200 baud, 500ms delay</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="footer">
+    Companion guide to <a href="https://cisien.github.io/meshcore-backhaul.html" style="color: var(--accent-local);">Fixing Our Mesh Congestion Problem</a> — the backhaul architecture proposal.<br/>
+    Built by the community. Polished with the help of AI.
+  </div>
+
+</div>
+</body>
+</html>
