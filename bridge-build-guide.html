@@ -24,6 +24,12 @@
   .tldr-box h3 { font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
   .tldr-box p { font-size: 0.95rem; color: var(--text-bright); line-height: 1.8; }
   .tldr-box p + p { margin-top: 0.6rem; }
+  .tldr-box a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
+  .tldr-box a:hover { border-bottom-color: var(--accent-local); }
+  .warning-box a { color: var(--accent-bridge); text-decoration: none; border-bottom: 1px solid rgba(245,197,66,0.3); }
+  .warning-box a:hover { border-bottom-color: var(--accent-bridge); }
+  .pilot-box a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
+  .pilot-box a:hover { border-bottom-color: var(--accent-local); }
   .prose { font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
   .prose em { color: var(--text-bright); font-style: italic; }
   .prose strong { color: var(--text-bright); }
@@ -84,7 +90,7 @@
 
   <div class="tldr-box">
     <h3>WHAT YOU'RE BUILDING</h3>
-    <p>A bridge node is two MeshCore radios connected via a serial (UART) cable. One radio talks to the backhaul network on <span class="freq-tag backhaul">911.500 MHz</span> using a directional antenna. The other serves the local mesh on <span class="freq-tag local">910.525 MHz</span> using an omni. MeshCore's RS232 bridge feature handles all the routing.</p>
+    <p>A bridge node is two MeshCore radios connected via a serial (UART) cable. One radio talks to the backhaul network on <span class="freq-tag backhaul">911.45 MHz</span> using a directional antenna. The other serves the local mesh on <span class="freq-tag local">910.525 MHz</span> using an omni. MeshCore's RS232 bridge feature handles all the routing.</p>
     <p>Both radios run MeshCore repeater firmware built with the RS232 bridge option enabled. <strong>The official MeshCore builds do not include bridge support</strong>, so you'll need to use our <a href="firmware.html">custom firmware builds</a>. The bridge delay makes the serial hop behave like a normal RF relay to the rest of the mesh. Companions and local repeaters are completely unaware the bridge exists.</p>
   </div>
 
@@ -219,7 +225,7 @@
       <line x1="0" y1="140" x2="1000" y2="140" stroke="#2a3a4e" stroke-width="1" stroke-dasharray="6,4"/>
 
       <rect x="15" y="8" width="200" height="24" rx="4" fill="rgba(255,107,74,0.1)" stroke="rgba(255,107,74,0.3)"/>
-      <text x="25" y="25" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">BACKHAUL — 911.500 MHz</text>
+      <text x="25" y="25" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">BACKHAUL — 911.45 MHz</text>
 
       <rect x="15" y="148" width="210" height="24" rx="4" fill="rgba(78,205,196,0.1)" stroke="rgba(78,205,196,0.3)"/>
       <text x="25" y="165" fill="#4ecdc4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">LOCAL MESH — 910.525 MHz</text>
@@ -242,7 +248,7 @@
       <!-- Radio 1 (backhaul) -->
       <rect x="440" y="75" width="120" height="44" rx="4" fill="rgba(255,107,74,0.08)" stroke="rgba(255,107,74,0.3)"/>
       <text x="500" y="93" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle" font-weight="600">RADIO 1 — R1</text>
-      <text x="500" y="109" fill="#c8d6e5" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">911.500 MHz</text>
+      <text x="500" y="109" fill="#c8d6e5" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">911.45 MHz</text>
 
       <!-- Serial link -->
       <line x1="500" y1="119" x2="500" y2="150" stroke="#f5c542" stroke-width="2"/>
@@ -367,7 +373,7 @@
 
   <div class="code-block"><pre><span class="comment"># Connect via serial console at 115200 baud</span>
 <span class="comment"># Radio params assumed already set:</span>
-<span class="comment">#   set radio 911.500,62.5,12,5</span>
+<span class="comment">#   set radio 911.45,62.5,12,5</span>
 <span class="comment">#   set name BRIDGE-WEST-BH</span>
 
 <span class="comment"># Enable the RS232 bridge</span>
@@ -423,7 +429,7 @@
 
   <div class="section-label">Antenna Placement &amp; Co-Site Considerations</div>
 
-  <p class="prose">With both radios operating within ~1 MHz of each other (910.525 and 911.500), co-site interference is a real consideration. The two antennas need physical separation to prevent the backhaul radio from desensing the local mesh radio (and vice versa). Here's what helps:</p>
+  <p class="prose">With both radios operating within ~1 MHz of each other (910.525 and 911.45), co-site interference is a real consideration. The two antennas need physical separation to prevent the backhaul radio from desensing the local mesh radio (and vice versa). Here's what helps:</p>
 
   <p class="prose"><strong>Vertical separation</strong> is your primary isolation tool. Mount the directional (backhaul) antenna below the omni (local mesh), with as much vertical distance as the site allows. Even 2–3 meters makes a significant difference. The omni's radiation pattern has a null along its vertical axis, so getting the directional into that null zone minimizes coupling.</p>
 
@@ -433,7 +439,7 @@
 
   <div class="warning-box">
     <h3>⚠ FUTURE-PROOFING: 500 KHZ BANDWIDTH</h3>
-    <p>If the community moves to 500 kHz bandwidth, channel separation drops to ~3× the channel width. You'll need to be more aggressive with physical separation — plan for 3+ meters between antennas, or consider mounting them on separate mast points. At 62.5 kHz, most sites will work fine with minimal separation.</p>
+    <p>If the community moves to 500 kHz bandwidth, the backhaul frequency shifts to <span style="color: #ff6b4a;">911.6 MHz</span>. Channel separation drops to ~2× the channel width. You'll need to be more aggressive with physical separation — plan for 3+ meters between antennas, or consider mounting them on separate mast points. At 62.5 kHz, most sites will work fine with minimal separation.</p>
   </div>
 
   <hr class="divider"/>
@@ -500,7 +506,7 @@
     <div style="background: var(--bg-card); border: 1px solid rgba(255,107,74,0.3); border-radius: 8px; padding: 1.2rem;">
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #ff6b4a; font-weight: 600; margin-bottom: 0.8rem;">RADIO 1 — BACKHAUL</div>
       <div style="font-size: 0.85rem; line-height: 1.8;">
-        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">911.500 MHz</span></div>
+        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">911.45 MHz</span></div>
         <div><span style="color: var(--text-dim);">Bandwidth:</span> <span style="color: var(--text-bright);">62.5 kHz</span></div>
         <div><span style="color: var(--text-dim);">SF:</span> <span style="color: var(--text-bright);">12</span></div>
         <div><span style="color: var(--text-dim);">Antenna:</span> <span style="color: var(--text-bright);">9 dBi Panel (COM-9028PN)</span></div>
