@@ -4,3 +4,16 @@ _site/
 .jekyll-metadata
 .bundle/
 vendor/
+Gemfile
+Gemfile.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
