@@ -4,86 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Build Guide: MeshCore RS232 Bridge Node</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap');
-
-  :root {
-    --bg: #0c1117; --bg-card: #151c25; --bg-card-alt: #1a2332; --border: #2a3a4e;
-    --text: #c8d6e5; --text-dim: #6b7f96; --text-bright: #e8f0f8;
-    --accent-summit: #ff6b4a; --accent-bridge: #f5c542; --accent-local: #4ecdc4; --accent-companion: #7c9cff;
-    --freq-high: #ff6b4a; --freq-low: #4ecdc4;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Source Serif 4', Georgia, serif; line-height: 1.7; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
-  h1 { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.3rem; letter-spacing: -0.5px; }
-  .subtitle { font-size: 1.05rem; color: var(--text-dim); margin-bottom: 2rem; font-style: italic; }
-  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.7rem; margin-top: 3rem; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .tldr-box { background: linear-gradient(135deg, #0f1a1f 0%, #151c25 100%); border: 1px solid rgba(78,205,196,0.3); border-left: 4px solid #4ecdc4; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 3rem; }
-  .tldr-box h3 { font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
-  .tldr-box p { font-size: 0.95rem; color: var(--text-bright); line-height: 1.8; }
-  .tldr-box p + p { margin-top: 0.6rem; }
-  .tldr-box a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
-  .tldr-box a:hover { border-bottom-color: var(--accent-local); }
-  .warning-box a { color: var(--accent-bridge); text-decoration: none; border-bottom: 1px solid rgba(245,197,66,0.3); }
-  .warning-box a:hover { border-bottom-color: var(--accent-bridge); }
-  .pilot-box a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
-  .pilot-box a:hover { border-bottom-color: var(--accent-local); }
-  .prose { font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
-  .prose em { color: var(--text-bright); font-style: italic; }
-  .prose strong { color: var(--text-bright); }
-  .prose a { color: var(--accent-local); text-decoration: none; border-bottom: 1px solid rgba(78,205,196,0.3); }
-  .prose a:hover { border-bottom-color: var(--accent-local); }
-  .warning-box { background: linear-gradient(135deg, #1a1a10 0%, #151c25 100%); border: 1px solid rgba(245,197,66,0.3); border-left: 4px solid #f5c542; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
-  .warning-box h3 { font-family: 'JetBrains Mono', monospace; color: #f5c542; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
-  .warning-box p { font-size: 0.9rem; line-height: 1.7; }
-  .info-box { background: linear-gradient(135deg, #0f1520 0%, #151c25 100%); border: 1px solid rgba(124,156,255,0.3); border-left: 4px solid #7c9cff; border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
-  .info-box h3 { font-family: 'JetBrains Mono', monospace; color: #7c9cff; font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 1px; }
-  .info-box p { font-size: 0.9rem; line-height: 1.7; }
-  .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
-  .pilot-box { background: linear-gradient(135deg, #0f1a15 0%, #151c25 100%); border: 1px solid rgba(78,205,196,0.25); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
-  .pilot-box h3 { font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; margin-bottom: 1rem; }
-  .pilot-step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
-  .pilot-num { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; color: rgba(78,205,196,0.3); flex-shrink: 0; width: 2rem; text-align: center; line-height: 1.3; }
-  .pilot-text { font-size: 0.9rem; line-height: 1.6; }
-  .pilot-text strong { color: var(--text-bright); }
-  .bom-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.88rem; }
-  .bom-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); text-align: left; padding: 0.8rem 1rem; border-bottom: 2px solid var(--border); }
-  .bom-table td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-  .bom-table tr:hover td { background: rgba(78,205,196,0.03); }
-  .bom-table .part-name { color: var(--text-bright); font-weight: 600; }
-  .bom-table .part-link { color: var(--accent-local); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
-  .bom-table .part-link:hover { text-decoration: underline; }
-  .bom-table .qty { font-family: 'JetBrains Mono', monospace; color: var(--accent-bridge); text-align: center; }
-  .bom-table .price { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
-  .bom-table .note { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.3rem; }
-  .bom-total { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent-local); padding: 0.8rem 1rem; border-top: 2px solid var(--border); }
-  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.15); padding: 0.15em 0.4em; border-radius: 3px; color: var(--accent-local); }
-  .code-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; margin: 1rem 0 1.5rem; overflow-x: auto; }
-  .code-block pre { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.6; color: var(--text-bright); white-space: pre; }
-  .code-block .comment { color: var(--text-dim); }
-  .code-block .cmd { color: var(--accent-local); }
-  .code-block .val { color: var(--accent-bridge); }
-  .freq-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 3px; }
-  .freq-tag.backhaul { background: rgba(255,107,74,0.15); color: #ff6b4a; border: 1px solid rgba(255,107,74,0.3); }
-  .freq-tag.local { background: rgba(78,205,196,0.15); color: #4ecdc4; border: 1px solid rgba(78,205,196,0.3); }
-  .wiring-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.88rem; }
-  .wiring-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); text-align: left; padding: 0.6rem 1rem; border-bottom: 2px solid var(--border); }
-  .wiring-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-  .wiring-table .pin-r1 { color: var(--accent-summit); }
-  .wiring-table .pin-r2 { color: var(--accent-local); }
-  .wiring-table .pin-wire { color: var(--accent-bridge); }
-  .impact-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0; }
-  @media (max-width: 700px) { .impact-row { grid-template-columns: 1fr; } .bom-table { font-size: 0.8rem; } .bom-table td, .bom-table th { padding: 0.6rem 0.5rem; } }
-  .impact-stat { text-align: center; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
-  .impact-stat .number { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: #4ecdc4; display: block; }
-  .impact-stat .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; display: block; }
-  .footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-dim); text-align: center; font-style: italic; }
-</style>
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div class="container">
+<div class="container" style="padding: 3rem 2rem;">
 
   <h1>Building an RS232 Bridge Node</h1>
   <p class="subtitle">Dual-radio bridge assembly guide for connecting backhaul and local mesh layers</p>
@@ -115,9 +39,9 @@
     <thead>
       <tr>
         <th>Component</th>
-        <th style="text-align:center;">Qty</th>
+        <th class="text-center">Qty</th>
         <th>Notes</th>
-        <th style="text-align:right;">Est. Price</th>
+        <th class="text-right">Est. Price</th>
       </tr>
     </thead>
     <tbody>
@@ -217,8 +141,8 @@
 
   <div class="section-label">Architecture Overview</div>
 
-  <div style="margin: 2rem 0;">
-    <svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
+  <div class="diagram-wrapper">
+    <svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" class="svg-full">
       <!-- Backhaul zone -->
       <rect x="0" y="0" width="1000" height="140" fill="rgba(255,107,74,0.03)"/>
       <rect x="0" y="140" width="1000" height="180" fill="rgba(78,205,196,0.02)"/>
@@ -242,7 +166,7 @@
       <line x1="560" y1="70" x2="790" y2="70" stroke="#ff6b4a" stroke-width="1.5" opacity="0.4" stroke-dasharray="4,3"/>
 
       <!-- Bridge node box -->
-      <rect x="420" y="40" width="160" height="240" rx="8" fill="var(--bg-card)" stroke="var(--accent-bridge)" stroke-width="1.5" opacity="0.9"/>
+      <rect x="420" y="40" width="160" height="240" rx="8" fill="#151c25" stroke="#f5c542" stroke-width="1.5" opacity="0.9"/>
       <text x="500" y="62" fill="#f5c542" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" font-weight="700">BRIDGE NODE</text>
 
       <!-- Radio 1 (backhaul) -->
@@ -328,7 +252,7 @@
 
   <div class="info-box">
     <h3>ℹ PIN REFERENCE</h3>
-    <p>On the RAK19003 mini base board, the UART pins are available on the IO header. Refer to the <a href="https://docs.rakwireless.com/Product-Categories/WisBlock/RAK19003/Datasheet/" target="_blank" style="color: #7c9cff;">RAK19003 datasheet</a> for the exact header pinout. The TX1 and RX1 pins correspond to the nRF52840's hardware UART1. Ensure you're using the correct UART — MeshCore's bridge uses the serial port specified at compile time via the <code>WITH_RS232_BRIDGE</code> flag.</p>
+    <p>On the RAK19003 mini base board, the UART pins are available on the IO header. Refer to the <a href="https://docs.rakwireless.com/Product-Categories/WisBlock/RAK19003/Datasheet/" target="_blank">RAK19003 datasheet</a> for the exact header pinout. The TX1 and RX1 pins correspond to the nRF52840's hardware UART1. Ensure you're using the correct UART — MeshCore's bridge uses the serial port specified at compile time via the <code>WITH_RS232_BRIDGE</code> flag.</p>
   </div>
 
   <hr class="divider"/>
@@ -339,14 +263,14 @@
 
   <div class="warning-box">
     <h3>⚠ IMPORTANT: CUSTOM FIRMWARE REQUIRED</h3>
-    <p>Do not use the standard firmware options in the MeshCore Flasher — they do not include bridge support. You must download the bridge-enabled firmware from our <a href="firmware.html" style="color: #f5c542;">Firmware Builds</a> page and flash it using the <strong>Custom Firmware</strong> option in the flasher.</p>
+    <p>Do not use the standard firmware options in the MeshCore Flasher — they do not include bridge support. You must download the bridge-enabled firmware from our <a href="firmware.html">Firmware Builds</a> page and flash it using the <strong>Custom Firmware</strong> option in the flasher.</p>
   </div>
 
   <div class="pilot-box">
     <h3>Flash Procedure (per radio)</h3>
     <div class="pilot-step">
       <div class="pilot-num">1</div>
-      <div class="pilot-text"><strong>Download the firmware for your board.</strong> Go to the <a href="firmware.html" style="color: #4ecdc4;">Firmware Builds</a> page and download the file matching your hardware (e.g., <code>RAK_4631_repeater_bridge_rs232_serial1</code> for a RAK4631 using UART1).</div>
+      <div class="pilot-text"><strong>Download the firmware for your board.</strong> Go to the <a href="firmware.html">Firmware Builds</a> page and download the file matching your hardware (e.g., <code>RAK_4631_repeater_bridge_rs232_serial1</code> for a RAK4631 using UART1).</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">2</div>
@@ -354,7 +278,7 @@
     </div>
     <div class="pilot-step">
       <div class="pilot-num">3</div>
-      <div class="pilot-text"><strong>Flash using the MeshCore Flasher.</strong> Go to <a href="https://flasher.meshcore.co.uk/" target="_blank" style="color: #4ecdc4;">flasher.meshcore.co.uk</a>, select your board type, then choose <strong>Custom Firmware</strong> and upload the file you downloaded. Follow the prompts to flash. Alternatively, for UF2 files, drag-and-drop onto the mass storage device.</div>
+      <div class="pilot-text"><strong>Flash using the MeshCore Flasher.</strong> Go to <a href="https://flasher.meshcore.co.uk/" target="_blank">flasher.meshcore.co.uk</a>, select your board type, then choose <strong>Custom Firmware</strong> and upload the file you downloaded. Follow the prompts to flash. Alternatively, for UF2 files, drag-and-drop onto the mass storage device.</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">4</div>
@@ -439,7 +363,7 @@
 
   <div class="warning-box">
     <h3>⚠ FUTURE-PROOFING: 500 KHZ BANDWIDTH</h3>
-    <p>If the community moves to 500 kHz bandwidth, the backhaul frequency shifts to <span style="color: #ff6b4a;">911.6 MHz</span>. Channel separation drops to ~2× the channel width. You'll need to be more aggressive with physical separation — plan for 3+ meters between antennas, or consider mounting them on separate mast points. At 62.5 kHz, most sites will work fine with minimal separation.</p>
+    <p>If the community moves to 500 kHz bandwidth, the backhaul frequency shifts to <span class="color-summit">911.6 MHz</span>. Channel separation drops to ~2× the channel width. You'll need to be more aggressive with physical separation — plan for 3+ meters between antennas, or consider mounting them on separate mast points. At 62.5 kHz, most sites will work fine with minimal separation.</p>
   </div>
 
   <hr class="divider"/>
@@ -502,33 +426,33 @@
 
   <div class="section-label">Quick Reference</div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;">
-    <div style="background: var(--bg-card); border: 1px solid rgba(255,107,74,0.3); border-radius: 8px; padding: 1.2rem;">
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #ff6b4a; font-weight: 600; margin-bottom: 0.8rem;">RADIO 1 — BACKHAUL</div>
-      <div style="font-size: 0.85rem; line-height: 1.8;">
-        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">911.45 MHz</span></div>
-        <div><span style="color: var(--text-dim);">Bandwidth:</span> <span style="color: var(--text-bright);">62.5 kHz</span></div>
-        <div><span style="color: var(--text-dim);">SF:</span> <span style="color: var(--text-bright);">7</span></div>
-        <div><span style="color: var(--text-dim);">Antenna:</span> <span style="color: var(--text-bright);">9 dBi Panel (COM-9028PN)</span></div>
-        <div><span style="color: var(--text-dim);">Bridge:</span> <span style="color: var(--text-bright);">Enabled, 115200 baud, 500ms delay</span></div>
+  <div class="ref-grid">
+    <div class="ref-card backhaul">
+      <div class="ref-card-title">RADIO 1 — BACKHAUL</div>
+      <div class="ref-card-body">
+        <div><span class="ref-label">Frequency:</span> <span class="ref-value">911.45 MHz</span></div>
+        <div><span class="ref-label">Bandwidth:</span> <span class="ref-value">62.5 kHz</span></div>
+        <div><span class="ref-label">SF:</span> <span class="ref-value">7</span></div>
+        <div><span class="ref-label">Antenna:</span> <span class="ref-value">9 dBi Panel (COM-9028PN)</span></div>
+        <div><span class="ref-label">Bridge:</span> <span class="ref-value">Enabled, 115200 baud, 500ms delay</span></div>
       </div>
     </div>
-    <div style="background: var(--bg-card); border: 1px solid rgba(78,205,196,0.3); border-radius: 8px; padding: 1.2rem;">
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #4ecdc4; font-weight: 600; margin-bottom: 0.8rem;">RADIO 2 — LOCAL MESH</div>
-      <div style="font-size: 0.85rem; line-height: 1.8;">
-        <div><span style="color: var(--text-dim);">Frequency:</span> <span style="color: var(--text-bright);">910.525 MHz</span></div>
-        <div><span style="color: var(--text-dim);">Bandwidth:</span> <span style="color: var(--text-bright);">62.5 kHz</span></div>
-        <div><span style="color: var(--text-dim);">SF:</span> <span style="color: var(--text-bright);">7</span></div>
-        <div><span style="color: var(--text-dim);">Antenna:</span> <span style="color: var(--text-bright);">Omni (3–6 dBi)</span></div>
-        <div><span style="color: var(--text-dim);">Bridge:</span> <span style="color: var(--text-bright);">Enabled, 115200 baud, 500ms delay</span></div>
+    <div class="ref-card local">
+      <div class="ref-card-title">RADIO 2 — LOCAL MESH</div>
+      <div class="ref-card-body">
+        <div><span class="ref-label">Frequency:</span> <span class="ref-value">910.525 MHz</span></div>
+        <div><span class="ref-label">Bandwidth:</span> <span class="ref-value">62.5 kHz</span></div>
+        <div><span class="ref-label">SF:</span> <span class="ref-value">7</span></div>
+        <div><span class="ref-label">Antenna:</span> <span class="ref-value">Omni (3–6 dBi)</span></div>
+        <div><span class="ref-label">Bridge:</span> <span class="ref-value">Enabled, 115200 baud, 500ms delay</span></div>
       </div>
     </div>
   </div>
 
   <hr class="divider"/>
 
-  <div class="footer">
-    Companion guide to <a href="https://cisien.github.io/meshcore-backhaul.html" style="color: var(--accent-local);">Fixing Our Mesh Congestion Problem</a> — the backhaul architecture proposal.<br/>
+  <div class="page-footer">
+    Companion guide to <a href="https://cisien.github.io/meshcore-backhaul.html">Fixing Our Mesh Congestion Problem</a> — the backhaul architecture proposal.<br/>
     Built by the community. Polished with the help of AI.
   </div>
 
