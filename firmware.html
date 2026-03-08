@@ -7,7 +7,7 @@ description: Browse and download firmware builds
 <h1>Firmware Builds</h1>
 <p class="subtitle">Firmware binaries built from the MeshCore project.</p>
 
-{% assign firmware_files = site.static_files | where_exp: "f", "f.path contains '/firmware/'" | where_exp: "f", "f.path contains '/firmware/observer/' == false" | sort: "path" %}
+{% assign firmware_files = site.static_files | where_exp: "f", "f.path contains '/firmware/'" | sort: "path" %}
 
 {% assign current_dir = "" %}
 {% assign has_files = false %}
