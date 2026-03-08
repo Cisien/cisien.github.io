@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Firmware
-description: Browse and download firmware builds
+title: Observer Firmware
+description: Browse and download observer firmware builds
 ---
 
-<h1>Firmware Builds</h1>
+<h1>Observer Firmware</h1>
 <p class="subtitle">Files are loaded directly from this repository via the GitHub API.</p>
 
 <div id="firmware-root">
@@ -14,7 +14,7 @@ description: Browse and download firmware builds
 <script>
 (function () {
   const REPO = 'cisien/cisien.github.io';
-  const FIRMWARE_PATH = 'firmware';
+  const FIRMWARE_PATH = 'firmware/observer';
   const API = 'https://api.github.com';
   const root = document.getElementById('firmware-root');
 
@@ -35,21 +35,17 @@ description: Browse and download firmware builds
     return res.json();
   }
 
-  // Recursively collect files, with optional directory name exclusions
-  async function collectFiles(path, excludeDirs) {
+  async function collectFiles(path) {
     const items = await fetchContents(path);
     const results = [];
 
-    const dirs = items.filter(i => i.type === 'dir' && !(excludeDirs && excludeDirs.includes(i.name)))
-      .sort((a, b) => a.name.localeCompare(b.name));
-    const files = items.filter(i => i.type === 'file' && !i.name.startsWith('.'))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const dirs = items.filter(i => i.type === 'dir').sort((a, b) => a.name.localeCompare(b.name));
+    const files = items.filter(i => i.type === 'file' && !i.name.startsWith('.')).sort((a, b) => a.name.localeCompare(b.name));
 
     for (const f of files) {
       results.push({ path: f.path, name: f.name, size: f.size, download_url: f.download_url });
     }
 
-    // Fetch all subdirectories in parallel
     const subResults = await Promise.all(dirs.map(d => collectFiles(d.path)));
     for (const sub of subResults) {
       results.push(...sub);
@@ -58,11 +54,10 @@ description: Browse and download firmware builds
     return results;
   }
 
-  // Group files by their directory relative to firmware/
   function groupByDir(files, basePath) {
     const groups = new Map();
     for (const f of files) {
-      const rel = f.path.slice(basePath.length + 1); // strip "firmware/"
+      const rel = f.path.slice(basePath.length + 1);
       const lastSlash = rel.lastIndexOf('/');
       const dir = lastSlash === -1 ? '' : rel.slice(0, lastSlash);
       if (!groups.has(dir)) groups.set(dir, []);
@@ -83,15 +78,14 @@ description: Browse and download firmware builds
   }
 
   async function render() {
-    const files = await collectFiles(FIRMWARE_PATH, ['observer']);
+    const files = await collectFiles(FIRMWARE_PATH);
 
     if (files.length === 0) {
-      root.innerHTML = '<div class="empty-state"><p>No firmware files yet.</p><p style="margin-top:0.5rem;font-size:0.85rem;">Add binary files to the <code>firmware/</code> directory in the repository.</p></div>';
+      root.innerHTML = '<div class="empty-state"><p>No observer firmware files yet.</p><p style="margin-top:0.5rem;font-size:0.85rem;">Add binary files to the <code>firmware/observer/</code> directory in the repository.</p></div>';
       return;
     }
 
     const groups = groupByDir(files, FIRMWARE_PATH);
-    // Sort directory keys: root first, then alphabetical
     const sortedKeys = [...groups.keys()].sort((a, b) => {
       if (a === '') return -1;
       if (b === '') return 1;
