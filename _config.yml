@@ -1,0 +1,8 @@
+title: cisien
+description: Guides, firmware, and resources
+baseurl: ""
+url: "https://cisien.github.io"
+
+exclude:
+  - LICENSE
+  - README.md
