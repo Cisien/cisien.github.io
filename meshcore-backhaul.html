@@ -66,7 +66,7 @@
 
   <div class="tldr-box">
     <h3>TL;DR</h3>
-    <p>Our summit repeaters hear every node in the mesh and are choking. The fix: move summit nodes to a second frequency so they only talk to each other, and add a few dual-radio "bridge" nodes to connect the two layers. <strong>No custom firmware. No changes for most operators.</strong> MeshCore's serial bridge already handles the routing natively. We can pilot it with one summit and one bridge node to prove it works before asking anyone else to change anything.</p>
+    <p>Our summit repeaters hear every node in the mesh and are choking. The fix: move summit nodes to a second frequency so they only talk to each other, and add a few dual-radio "bridge" nodes to connect the two layers. <strong>No changes for most operators.</strong> MeshCore's serial bridge handles all the routing. The bridge nodes require <a href="firmware.html" style="color: #4ecdc4; border-bottom: 1px solid rgba(78,205,196,0.3);">custom firmware builds</a> with bridge support enabled — the official builds don't include it. We can pilot it with one summit and one bridge node to prove it works before asking anyone else to change anything.</p>
   </div>
 
   <div class="section-label">The Problem We're All Feeling</div>
@@ -295,7 +295,7 @@
   <hr class="divider"/>
 
   <div class="section-label">Bridge Node Detail</div>
-  <p class="prose">A bridge node is two MeshCore radios connected by a serial cable. MeshCore's serial bridge is a native, first-class firmware feature — no custom code, no hacks. Any combination of NRF52 (RAK4631, RAK19003) or ESP32 (Heltec V3, T-Beam) boards works over RS-232. For solar-powered sites, dual RAK4631s are ideal due to the NRF52's low current draw.</p>
+  <p class="prose">A bridge node is two MeshCore radios connected by a serial cable. MeshCore supports serial bridging as a firmware feature, but the <strong>official builds do not include bridge support</strong>. We provide <a href="firmware.html" style="color: var(--accent-local); border-bottom: 1px solid rgba(78,205,196,0.3);">custom firmware builds</a> with bridging enabled for multiple hardware targets. Any combination of NRF52 (RAK4631, RAK19003) or ESP32 (Heltec V3, T-Beam) boards works over RS-232. For solar-powered sites, dual RAK4631s are ideal due to the NRF52's low current draw.</p>
 
   <div class="diagram-wrapper">
     <svg class="arch-diagram" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
@@ -313,11 +313,11 @@
       <text x="495" y="132" fill="#6b7f96" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">RAK4631 / Heltec / T-Beam</text>
       <rect x="310" y="170" width="180" height="40" rx="5" fill="rgba(245,197,66,0.06)" stroke="rgba(245,197,66,0.25)"/>
       <text x="400" y="193" fill="#f5c542" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" font-weight="600">RS-232 / UART BRIDGE</text>
-      <text x="400" y="206" fill="#6b7f96" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">MeshCore native serial bridge</text>
+      <text x="400" y="206" fill="#6b7f96" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">MeshCore serial bridge (custom firmware)</text>
       <line x1="305" y1="140" x2="350" y2="170" stroke="#f5c542" stroke-width="1.2" opacity="0.5"/>
       <line x1="495" y1="140" x2="450" y2="170" stroke="#f5c542" stroke-width="1.2" opacity="0.5"/>
       <rect x="275" y="230" width="250" height="25" rx="4" fill="rgba(124,156,255,0.06)" stroke="rgba(124,156,255,0.2)"/>
-      <text x="400" y="247" fill="#7c9cff" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">No custom firmware — standard MeshCore build</text>
+      <text x="400" y="247" fill="#7c9cff" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="middle">Custom bridge firmware required — see cisien.github.io</text>
       <line x1="230" y1="60" x2="210" y2="30" stroke="#ff6b4a" stroke-width="1.5" opacity="0.5"/>
       <line x1="200" y1="35" x2="220" y2="25" stroke="#ff6b4a" stroke-width="1" opacity="0.4"/>
       <text x="185" y="22" fill="#ff6b4a" font-family="JetBrains Mono, monospace" font-size="7" opacity="0.6">ANT1</text>
@@ -416,8 +416,8 @@
     <div class="a">If a bridge node goes down, that zone loses backhaul access — but the local mesh in that area keeps working for local traffic. And we can mitigate this with redundancy: two bridge nodes per zone, or ensuring adjacent zones' bridges have overlapping coverage. We also don't need to deploy the entire system at once — even a single bridge dramatically improves things for its zone.</div>
   </div>
   <div class="objection-card">
-    <div class="q">"Does this require custom firmware work?"</div>
-    <div class="a">No. MeshCore's serial bridge is a first-class firmware feature — it's already built-in and supported. The bridge nodes use standard MeshCore builds configured for serial bridging. The summit nodes just need a frequency change in their config. No one needs to write or compile any custom code.</div>
+    <div class="q">"Does this require custom firmware?"</div>
+    <div class="a">Yes — but we've done the work for you. MeshCore supports serial bridging as a firmware feature, but the official builds don't include it. We provide <a href="firmware.html" style="color: var(--accent-local); border-bottom: 1px solid rgba(78,205,196,0.3);">pre-built firmware</a> with bridge support enabled for all common hardware targets. Flash it using the <strong>Custom Firmware</strong> option in the <a href="https://flasher.meshcore.co.uk/" target="_blank" style="color: var(--accent-local); border-bottom: 1px solid rgba(78,205,196,0.3);">MeshCore Flasher</a>. The summit nodes just need a frequency change in their config. No one needs to compile anything.</div>
   </div>
   <div class="objection-card">
     <div class="q">"I have a local repeater. Do I need to do anything?"</div>
@@ -439,7 +439,7 @@
 
   <div class="pilot-box">
     <h3>Phase 1 — Proof of Concept (1–2 volunteers)</h3>
-    <div class="pilot-step"><div class="pilot-num">1</div><div class="pilot-text"><strong>Build one bridge node.</strong> Two MeshCore radios (any combo of RAK4631/Heltec/T-Beam) connected via RS-232, configured with serial bridge firmware. Place it at a mid-altitude site with line-of-sight to a summit.</div></div>
+    <div class="pilot-step"><div class="pilot-num">1</div><div class="pilot-text"><strong>Build one bridge node.</strong> Two MeshCore radios (any combo of RAK4631/Heltec/T-Beam) connected via RS-232, flashed with our <a href="firmware.html" style="color: #4ecdc4;">custom bridge firmware</a> and configured for serial bridging. Place it at a mid-altitude site with line-of-sight to a summit. See the <a href="bridge-build-guide.html" style="color: #4ecdc4;">Bridge Build Guide</a> for detailed instructions.</div></div>
     <div class="pilot-step"><div class="pilot-num">2</div><div class="pilot-text"><strong>Move one summit repeater to the backhaul frequency.</strong> The summit operator updates the frequency setting over the air. That summit now only hears the bridge node (and potentially other summits later).</div></div>
     <div class="pilot-step"><div class="pilot-num">3</div><div class="pilot-text"><strong>Test.</strong> Send messages through the bridge and verify end-to-end delivery. Measure latency. Monitor the summit node's channel utilization — it should drop dramatically. Compare to the current congested state.</div></div>
     <div class="pilot-step"><div class="pilot-num">4</div><div class="pilot-text"><strong>Share the results with the group.</strong> Real data from our own mesh is more convincing than any diagram. If it works, the path to full deployment becomes obvious. If it doesn't, we've learned something and only two nodes were involved.</div></div>

@@ -84,8 +84,8 @@
 
   <div class="tldr-box">
     <h3>WHAT YOU'RE BUILDING</h3>
-    <p>A bridge node is two MeshCore radios connected via a serial (UART) cable. One radio talks to the backhaul network on <span class="freq-tag backhaul">911.500 MHz</span> using a directional antenna. The other serves the local mesh on <span class="freq-tag local">910.525 MHz</span> using an omni. MeshCore's native RS232 bridge feature handles all the routing — <strong>no custom firmware required.</strong></p>
-    <p>Both radios run standard MeshCore repeater firmware. The bridge delay makes the serial hop behave like a normal RF relay to the rest of the mesh. Companions and local repeaters are completely unaware the bridge exists.</p>
+    <p>A bridge node is two MeshCore radios connected via a serial (UART) cable. One radio talks to the backhaul network on <span class="freq-tag backhaul">911.500 MHz</span> using a directional antenna. The other serves the local mesh on <span class="freq-tag local">910.525 MHz</span> using an omni. MeshCore's RS232 bridge feature handles all the routing.</p>
+    <p>Both radios run MeshCore repeater firmware built with the RS232 bridge option enabled. <strong>The official MeshCore builds do not include bridge support</strong>, so you'll need to use our <a href="firmware.html">custom firmware builds</a>. The bridge delay makes the serial hop behave like a normal RF relay to the rest of the mesh. Companions and local repeaters are completely unaware the bridge exists.</p>
   </div>
 
   <div class="impact-row">
@@ -329,26 +329,33 @@
 
   <div class="section-label">Flashing MeshCore Firmware</div>
 
-  <p class="prose">Both radios run standard MeshCore repeater firmware. Flash each RAK4631 using the <a href="https://flasher.meshcore.co.uk/" target="_blank">MeshCore Flasher</a> web tool or via PlatformIO if building from source. Select the <strong>Simple Repeater</strong> firmware for your board type (RAK4631 / nRF52).</p>
+  <p class="prose">Both radios need MeshCore repeater firmware with the RS232 bridge option compiled in. <strong>The official MeshCore builds do not include bridge support</strong>, so you'll need to use our custom builds. Download the correct firmware for your board from the <a href="firmware.html">Firmware Builds</a> page, then flash it using the MeshCore Flasher's <em>Custom Firmware</em> option.</p>
 
-  <p class="prose">If building from source, ensure the <code>WITH_RS232_BRIDGE</code> build flag is enabled in your <code>platformio.ini</code> for the radio that will <em>send</em> bridged packets out over serial. For bidirectional bridging, both radios need this flag enabled.</p>
+  <div class="warning-box">
+    <h3>⚠ IMPORTANT: CUSTOM FIRMWARE REQUIRED</h3>
+    <p>Do not use the standard firmware options in the MeshCore Flasher — they do not include bridge support. You must download the bridge-enabled firmware from our <a href="firmware.html" style="color: #f5c542;">Firmware Builds</a> page and flash it using the <strong>Custom Firmware</strong> option in the flasher.</p>
+  </div>
 
   <div class="pilot-box">
     <h3>Flash Procedure (per radio)</h3>
     <div class="pilot-step">
       <div class="pilot-num">1</div>
-      <div class="pilot-text"><strong>Connect the RAK4631 via USB-C.</strong> The board should appear as a USB mass storage device (if using the UF2 bootloader) or as a serial port.</div>
+      <div class="pilot-text"><strong>Download the firmware for your board.</strong> Go to the <a href="firmware.html" style="color: #4ecdc4;">Firmware Builds</a> page and download the file matching your hardware (e.g., <code>RAK_4631_repeater_bridge_rs232_serial1</code> for a RAK4631 using UART1).</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">2</div>
-      <div class="pilot-text"><strong>Flash the repeater firmware.</strong> Use the MeshCore Flasher at <a href="https://flasher.meshcore.co.uk/" target="_blank" style="color: #4ecdc4;">flasher.meshcore.co.uk</a> — select RAK4631, Simple Repeater, and follow the prompts. Alternatively, drag-and-drop the UF2 file onto the mass storage device.</div>
+      <div class="pilot-text"><strong>Connect the RAK4631 via USB-C.</strong> The board should appear as a USB mass storage device (if using the UF2 bootloader) or as a serial port.</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">3</div>
-      <div class="pilot-text"><strong>Connect to the serial console</strong> (115200 baud) to configure. Use PuTTY, screen, minicom, or the MeshCore web config tool.</div>
+      <div class="pilot-text"><strong>Flash using the MeshCore Flasher.</strong> Go to <a href="https://flasher.meshcore.co.uk/" target="_blank" style="color: #4ecdc4;">flasher.meshcore.co.uk</a>, select your board type, then choose <strong>Custom Firmware</strong> and upload the file you downloaded. Follow the prompts to flash. Alternatively, for UF2 files, drag-and-drop onto the mass storage device.</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">4</div>
+      <div class="pilot-text"><strong>Connect to the serial console</strong> (115200 baud) to configure. Use PuTTY, screen, minicom, or the MeshCore web config tool.</div>
+    </div>
+    <div class="pilot-step">
+      <div class="pilot-num">5</div>
       <div class="pilot-text"><strong>Repeat for the second radio.</strong> Both need to be flashed and configured independently before wiring them together.</div>
     </div>
   </div>
