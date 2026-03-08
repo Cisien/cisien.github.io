@@ -14,8 +14,10 @@ description: Browse and download observer firmware builds
 <script>
 (function () {
   const REPO = 'cisien/cisien.github.io';
-  const FIRMWARE_PATH = 'firmware/observer';
+  const BRANCH = 'main';
+  const FIRMWARE_PREFIX = 'firmware/observer/';
   const API = 'https://api.github.com';
+  const RAW = 'https://raw.githubusercontent.com';
   const root = document.getElementById('firmware-root');
 
   function formatSize(bytes) {
@@ -27,43 +29,6 @@ description: Browse and download observer firmware builds
 
   function fileIcon() {
     return '<svg class="file-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/></svg>';
-  }
-
-  async function fetchContents(path) {
-    const res = await fetch(`${API}/repos/${REPO}/contents/${path}`);
-    if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
-    return res.json();
-  }
-
-  async function collectFiles(path) {
-    const items = await fetchContents(path);
-    const results = [];
-
-    const dirs = items.filter(i => i.type === 'dir').sort((a, b) => a.name.localeCompare(b.name));
-    const files = items.filter(i => i.type === 'file' && !i.name.startsWith('.')).sort((a, b) => a.name.localeCompare(b.name));
-
-    for (const f of files) {
-      results.push({ path: f.path, name: f.name, size: f.size, download_url: f.download_url });
-    }
-
-    const subResults = await Promise.all(dirs.map(d => collectFiles(d.path)));
-    for (const sub of subResults) {
-      results.push(...sub);
-    }
-
-    return results;
-  }
-
-  function groupByDir(files, basePath) {
-    const groups = new Map();
-    for (const f of files) {
-      const rel = f.path.slice(basePath.length + 1);
-      const lastSlash = rel.lastIndexOf('/');
-      const dir = lastSlash === -1 ? '' : rel.slice(0, lastSlash);
-      if (!groups.has(dir)) groups.set(dir, []);
-      groups.get(dir).push(f);
-    }
-    return groups;
   }
 
   function fileItem(f) {
@@ -78,14 +43,40 @@ description: Browse and download observer firmware builds
   }
 
   async function render() {
-    const files = await collectFiles(FIRMWARE_PATH);
+    // Single API call to get the entire repo tree
+    const res = await fetch(`${API}/repos/${REPO}/git/trees/${BRANCH}?recursive=1`);
+    if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+    const data = await res.json();
+
+    const files = data.tree
+      .filter(item =>
+        item.type === 'blob' &&
+        item.path.startsWith(FIRMWARE_PREFIX) &&
+        !item.path.split('/').pop().startsWith('.')
+      )
+      .map(item => ({
+        path: item.path,
+        name: item.path.split('/').pop(),
+        size: item.size,
+        download_url: `${RAW}/${REPO}/${BRANCH}/${item.path}`
+      }))
+      .sort((a, b) => a.path.localeCompare(b.path));
 
     if (files.length === 0) {
       root.innerHTML = '<div class="empty-state"><p>No observer firmware files yet.</p><p style="margin-top:0.5rem;font-size:0.85rem;">Add binary files to the <code>firmware/observer/</code> directory in the repository.</p></div>';
       return;
     }
 
-    const groups = groupByDir(files, FIRMWARE_PATH);
+    // Group by directory relative to firmware/observer/
+    const groups = new Map();
+    for (const f of files) {
+      const rel = f.path.slice(FIRMWARE_PREFIX.length);
+      const lastSlash = rel.lastIndexOf('/');
+      const dir = lastSlash === -1 ? '' : rel.slice(0, lastSlash);
+      if (!groups.has(dir)) groups.set(dir, []);
+      groups.get(dir).push(f);
+    }
+
     const sortedKeys = [...groups.keys()].sort((a, b) => {
       if (a === '') return -1;
       if (b === '') return 1;
