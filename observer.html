@@ -5,7 +5,7 @@ description: Browse and download observer firmware builds
 ---
 
 <h1>Observer Firmware</h1>
-<p class="subtitle">Firmware binaries with observer mode enabled.</p>
+<p class="subtitle">Firmware binaries with observer mode enabled — no bridging, just observe.</p>
 
 {% assign observer_files = site.static_files | where_exp: "f", "f.path contains '/firmware/observer/'" | sort: "path" %}
 

@@ -16,8 +16,8 @@ description: Browse and download firmware builds
   {% assign parts = f.path | split: "/" %}
   {% comment %}path looks like /firmware/DeviceName/file.bin — parts[0] is empty, parts[1] is firmware{% endcomment %}
   {% if parts.size >= 4 %}
-    {% comment %}Skip observer files{% endcomment %}
-    {% if parts[2] == "observer" %}
+    {% comment %}Skip observer and bridged-observer files{% endcomment %}
+    {% if parts[2] == "observer" or parts[2] == "bridged-observer" %}
       {% continue %}
     {% endif %}
     {% comment %}Skip hidden files{% endcomment %}
