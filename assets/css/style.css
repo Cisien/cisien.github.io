@@ -4,6 +4,10 @@
    Design Tokens
    ─────────────────────────────────────────────── */
 
+html {
+  scrollbar-gutter: stable;
+}
+
 :root {
   --bg: #0c1117;
   --bg-card: #151c25;
