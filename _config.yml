@@ -1,7 +1,7 @@
-title: cisien
-description: Guides, firmware, and resources
+title: Cisien's Stuff
+description: Random projects, builds, firmware, and whatever else has my attention.
 baseurl: ""
-url: "https://cisien.github.io"
+url: "https://stuff.cisien.com"
 
 exclude:
   - LICENSE
