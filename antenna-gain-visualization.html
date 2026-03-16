@@ -1,0 +1,275 @@
+---
+layout: default
+title: Antenna Gain Visualized
+description: What a 9 dBi antenna beam actually looks like against real terrain
+---
+
+  <h1>What 9 dBi Actually Looks Like</h1>
+  <p class="subtitle">Antenna gain visualized against real Cascade-to-Puget-Sound terrain</p>
+
+  <div class="tldr-box">
+    <h3>TL;DR</h3>
+    <p>Those simplified antenna diagrams with two fat ovals? They're lying to you. A 9 dBi antenna with a 15° beamwidth produces a <em>razor-thin wedge</em> — not a bubble. This page overlays a geometrically correct beam pattern on real USGS elevation data from a site in the Cascades heading west to the Puget Sound, so you can see what the coverage actually looks like against terrain.</p>
+  </div>
+
+  <div class="section-label">The Problem With Simplified Diagrams</div>
+  <p class="prose">You've seen the image: two roughly equal ellipses sitting side by side, one labeled "9 dBi" — as if a directional antenna just squishes an omnidirectional pattern into a slightly longer oval. That diagram gets the <em>concept</em> right (gain concentrates energy in one direction) but the <em>scale</em> catastrophically wrong.</p>
+
+  <p class="prose">At 9 dBi, the main lobe concentrates power at <strong>7.9× the density</strong> of an isotropic radiator — but only within a narrow cone. A 15° beamwidth means all that energy is packed into just 4.2% of the full circle. The isotropic "bubble" should be <em>tiny</em> compared to the lobe, not nearly the same size.</p>
+
+  <div class="section-label">The Math</div>
+  <p class="prose">From the antenna site at <code>47.809024, -121.727227</code> (elevation ~1,153 m in the Cascades), with a 30 m tower, the antenna sits at roughly 1,183 m ASL. With a 15° beamwidth pointed horizontally:</p>
+
+  <div class="data-grid">
+    <div class="data-card">
+      <div class="data-card-title summit">LOWER BEAM EDGE</div>
+      <div class="data-card-number danger">−7.5°</div>
+      <div class="data-card-label">FROM HORIZONTAL</div>
+      <div class="data-card-desc">tan(7.5°) ≈ 0.1317</div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-title local">HITS SEA LEVEL AT</div>
+      <div class="data-card-number local">~9.0 km</div>
+      <div class="data-card-label">1183 m / tan(7.5°)</div>
+      <div class="data-card-desc">Not 50 km. Not even close.</div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-title summit">BEAM COVERAGE</div>
+      <div class="data-card-number danger">4.2%</div>
+      <div class="data-card-label">OF FULL CIRCLE</div>
+      <div class="data-card-desc">15° / 360° — a sliver</div>
+    </div>
+  </div>
+
+  <div class="section-label">Interactive Terrain Profile</div>
+  <p class="prose">This visualization uses real USGS elevation data sampled along a due-west transect from the antenna site across the Cascades foothills, Snohomish lowlands, Puget Sound, the Kitsap Peninsula, and out to Hood Canal — roughly 76 km total. The beam is drawn with correct geometry: ray angles are computed in true (distance, elevation) space and then projected into the exaggerated view alongside the terrain.</p>
+
+  <div class="info-box">
+    <h3>HOW TO READ THIS</h3>
+    <p>The orange wedge is the antenna's main lobe — <strong>to scale</strong>. The vertical exaggeration applies equally to terrain and beam, preserving the true angular relationship. Drag the sliders to change parameters and watch where the lower beam edge meets the ground. Try dropping the exaggeration to 1× to see just how thin the beam really is.</p>
+  </div>
+
+  <div class="diagram-wrapper">
+    <div id="beam-viz" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 2rem;">
+      <svg id="svg" width="100%" viewBox="0 0 680 400"></svg>
+
+      <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; margin-top: 1rem;">
+        <label style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim);">BEAMWIDTH</label>
+        <input type="range" min="3" max="90" value="15" step="1" id="bw-slider" oninput="render()" style="width: 100%; accent-color: var(--accent-local);">
+        <span id="bw-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-bright); min-width: 3.5rem; text-align: right;">15°</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; margin-top: 0.5rem;">
+        <label style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim);">TOWER HT</label>
+        <input type="range" min="5" max="100" value="30" step="1" id="ht-slider" oninput="render()" style="width: 100%; accent-color: var(--accent-local);">
+        <span id="ht-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-bright); min-width: 3.5rem; text-align: right;">30 m</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; margin-top: 0.5rem;">
+        <label style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim);">TILT</label>
+        <input type="range" min="-15" max="10" value="0" step="0.5" id="tilt-slider" oninput="render()" style="width: 100%; accent-color: var(--accent-local);">
+        <span id="tilt-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-bright); min-width: 3.5rem; text-align: right;">0°</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; margin-top: 0.5rem;">
+        <label style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim);">VERT EXAG</label>
+        <input type="range" min="1" max="40" value="15" step="1" id="exag-slider" oninput="render()" style="width: 100%; accent-color: var(--accent-local);">
+        <span id="exag-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-bright); min-width: 3.5rem; text-align: right;">15×</span>
+      </div>
+
+      <div style="display: flex; gap: 1.5rem; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim);">
+        <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #f5c542; margin-right: 6px; vertical-align: middle;"></span>Beam coverage</span>
+        <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #7c9cff; margin-right: 6px; vertical-align: middle;"></span>Water</span>
+        <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #4ecdc4; margin-right: 6px; vertical-align: middle;"></span>Terrain</span>
+      </div>
+
+      <p id="info" style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.8rem; line-height: 1.7;"></p>
+    </div>
+  </div>
+
+  <script>
+  const dist_m=[0,384.2,768.5,1152.7,1537,1921.2,2305.5,2689.7,3074,3458.2,3842.5,4226.7,4611,4995.2,5379.5,5763.7,6148,6532.2,6916.5,7300.7,7685,8069.2,8453.5,8837.7,9222,9606.2,9990.5,10374.7,10759,11143.2,11527.5,11911.7,12296,12680.2,13064.5,13448.7,13833,14217.2,14601.5,14985.7,15370,15754.2,16138.5,16522.7,16906.9,17291.2,17675.4,18059.7,18443.9,18828.2,19212.4,19596.7,19980.9,20365.2,20749.4,21133.7,21517.9,21902.2,22286.4,22670.7,23054.9,23439.2,23823.4,24207.7,24591.9,24976.2,25360.4,25744.7,26128.9,26513.2,26897.4,27281.7,27665.9,28050.2,28434.4,28818.7,29202.9,29587.2,29971.4,30355.7,30739.9,31124.2,31508.4,31892.7,32276.9,32661.2,33045.4,33429.7,33813.9,34198.1,34582.4,34966.6,35350.9,35735.1,36119.4,36503.6,36887.9,37272.1,37656.4,38040.6,38424.9,38809.1,39193.4,39577.6,39961.9,40346.1,40730.4,41114.6,41498.9,41883.1,42267.4,42651.6,43035.9,43420.1,43804.4,44188.6,44572.9,44957.1,45341.4,45725.6,46109.9,46494.1,46878.4,47262.6,47646.9,48031.1,48415.4,48799.6,49183.9,49568.1,49952.4,50336.6,50720.8,51105.1,51489.3,51873.6,52257.8,52642.1,53026.3,53410.6,53794.8,54179.1,54563.3,54947.6,55331.8,55716.1,56100.3,56484.6,56868.8,57253.1,57637.3,58021.6,58405.8,58790.1,59174.3,59558.6,59942.8,60327.1,60711.3,61095.6,61479.8,61864.1,62248.3,62632.6,63016.8,63401.1,63785.3,64169.6,64553.8,64938.1,65322.3,65706.6,66090.8,66475.1,66859.3,67243.6,67627.8,68012,68396.3,68780.5,69164.8,69549,69933.3,70317.5,70701.8,71086,71470.3,71854.5,72238.8,72623,73007.3,73391.5,73775.8,74160,74544.3,74928.5,75312.8,75697,76081.3,76465.5];
+  const elev_m=[1152.9,1044.7,1045.9,1068.8,1086.2,1068.9,768.5,674.3,531.9,478.8,510.3,357.5,289,264.6,234.8,252.8,260.2,245.3,214.3,163.6,145.2,144.9,117.8,75.7,77.5,117.7,207.5,282.6,360.8,334.1,334.1,414.5,373.3,311.6,300.2,314.6,369.4,437.9,414.6,429.8,395.3,367.1,342.3,288.2,174.5,170.1,141.9,80.2,67.6,62.2,10.3,10.8,10.2,9.6,6.2,72.1,82.5,117.4,129.6,109.7,81,123.5,151,134.6,143.2,145.1,113.1,113.4,91.5,93.8,128.5,138.4,116.8,127.2,134.6,124.7,135.2,147.6,124.1,117.6,93.6,84,91.4,71.7,65,77.8,110.5,123.7,123.9,125.7,122.8,112.4,60.4,44.7,37.7,45.1,59.8,72.1,100.5,146.9,148.4,134.7,103.9,75.7,89.4,79.7,84,104.9,107.8,99.4,112.5,122,107.9,106.4,105.9,108.8,120.6,126.3,127.7,132.5,130.6,123.3,125.1,73.3,85.9,53.3,30.2,15.5,3.7,-0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.1,94.7,126.7,103.9,75.8,63.8,36.9,22.6,35.8,33.7,27.8,28.2,34.4,34,48.5,41.2,59.3,39.6,30.5,24.1,55.3,50.1,70.8,114.6,137,143.4,131.1,138.4,129.4,68.2,31.9,66.9,60.8,43.8,49.9,35.6,10.8,1.1,0,0,0,0,0,0,0,0,0,0,1.3,1.3,1.3,6.6,36.5];
+
+  const maxDist=dist_m[dist_m.length-1];
+  const L=60,R=670,Wp=R-L;
+  const MAX_ELEV=1600;
+  const B=340;
+
+  function render(){
+    const bwDeg=parseFloat(document.getElementById('bw-slider').value);
+    const antHt=parseFloat(document.getElementById('ht-slider').value);
+    const tiltDeg=parseFloat(document.getElementById('tilt-slider').value);
+    const exag=parseFloat(document.getElementById('exag-slider').value);
+
+    document.getElementById('bw-val').textContent=bwDeg+'°';
+    document.getElementById('ht-val').textContent=antHt+' m';
+    document.getElementById('tilt-val').textContent=tiltDeg+'°';
+    document.getElementById('exag-val').textContent=exag+'×';
+
+    const hScale=Wp/maxDist;
+    const vScale=hScale*exag;
+    const baseElev=-100;
+
+    function toX(d){return L+d*hScale;}
+    function toY(e){return B-(e-baseElev)*vScale;}
+
+    var T=toY(MAX_ELEV);
+    var bottomPx=toY(baseElev);
+    var svgTop=T-25;
+    var svgBot=bottomPx+25;
+    var svgH=svgBot-svgTop;
+    document.getElementById('svg').setAttribute('viewBox','0 '+svgTop+' 680 '+svgH);
+
+    const antElevASL=elev_m[0]+antHt;
+    const antPxX=toX(0);
+    const antPxY=toY(antElevASL);
+
+    const tiltRad=tiltDeg*Math.PI/180;
+    const halfBwRad=(bwDeg/2)*Math.PI/180;
+    const upperAngle=tiltRad+halfBwRad;
+    const lowerAngle=tiltRad-halfBwRad;
+    const boresightAngle=tiltRad;
+
+    const tanUpper=Math.tan(upperAngle);
+    const tanLower=Math.tan(lowerAngle);
+    const tanBore=Math.tan(boresightAngle);
+
+    function beamE(d,tanA){return antElevASL+d*tanA;}
+
+    var upperPts=[{x:antPxX,y:antPxY}];
+    for(var i=0;i<dist_m.length;i++){
+      upperPts.push({x:toX(dist_m[i]),y:toY(beamE(dist_m[i],tanUpper))});
+    }
+    upperPts.push({x:R+2,y:toY(beamE(maxDist*1.02,tanUpper))});
+
+    // First pass: find the LAST intersection of lower beam edge with terrain
+    var hitDist=null;
+    for(var i=1;i<dist_m.length;i++){
+      var d=dist_m[i];
+      var bE=beamE(d,tanLower);
+      var tE=Math.max(0,elev_m[i]);
+      var d0=dist_m[i-1];
+      var be0=beamE(d0,tanLower);
+      var te0=Math.max(0,elev_m[i-1]);
+      // Detect crossing: beam was above terrain, now at or below
+      if(be0>te0 && bE<=tE){
+        var frac=(be0-te0)/((tE-te0)-(bE-be0));
+        hitDist=d0+frac*(d-d0);
+      }
+    }
+
+    // Second pass: build lower edge path (hug terrain where beam is below ground)
+    var lowerPts=[{x:antPxX,y:antPxY}];
+    for(var i=1;i<dist_m.length;i++){
+      var d=dist_m[i];
+      var bE=beamE(d,tanLower);
+      var tE=Math.max(0,elev_m[i]);
+      if(bE<=tE){
+        lowerPts.push({x:toX(d),y:toY(tE)});
+      } else {
+        lowerPts.push({x:toX(d),y:toY(bE)});
+      }
+    }
+    var farLower=beamE(maxDist*1.02,tanLower);
+    lowerPts.push({x:R+2,y:toY(Math.max(farLower,0))});
+
+    var s='';
+    s+='<defs><clipPath id="vc"><rect x="'+L+'" y="'+svgTop+'" width="'+(Wp+12)+'" height="'+svgH+'"/></clipPath></defs>';
+
+    // Grid
+    for(var d=0;d<=maxDist;d+=10000){
+      var x=toX(d);
+      s+='<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+bottomPx+'" stroke="#2a3a4e" stroke-width="0.3"/>';
+      s+='<text x="'+x+'" y="'+(bottomPx+14)+'" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">'+Math.round(d/1000)+'km</text>';
+    }
+    for(var e=0;e<=MAX_ELEV;e+=200){
+      var y=toY(e);
+      s+='<line x1="'+L+'" y1="'+y+'" x2="'+R+'" y2="'+y+'" stroke="#2a3a4e" stroke-width="0.3"/>';
+      s+='<text x="'+(L-4)+'" y="'+(y+3)+'" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">'+e+'m</text>';
+    }
+
+    // Water
+    for(var i=0;i<dist_m.length-1;i++){
+      if(elev_m[i]<=1&&elev_m[i+1]<=1){
+        s+='<rect x="'+toX(dist_m[i])+'" y="'+toY(0)+'" width="'+(toX(dist_m[i+1])-toX(dist_m[i]))+'" height="'+(bottomPx-toY(0))+'" fill="#7c9cff" opacity="0.15"/>';
+      }
+    }
+
+    // Terrain fill
+    var tf='M'+toX(0)+','+bottomPx;
+    for(var i=0;i<dist_m.length;i++) tf+=' L'+toX(dist_m[i])+','+toY(Math.max(0,elev_m[i]));
+    tf+=' L'+toX(maxDist)+','+bottomPx+' Z';
+    s+='<path d="'+tf+'" fill="#4ecdc4" opacity="0.2"/>';
+    var tl='M'+toX(0)+','+toY(Math.max(0,elev_m[0]));
+    for(var i=1;i<dist_m.length;i++) tl+=' L'+toX(dist_m[i])+','+toY(Math.max(0,elev_m[i]));
+    s+='<path d="'+tl+'" fill="none" stroke="#4ecdc4" stroke-width="1.2"/>';
+
+    // Beam polygon
+    var bp='M'+antPxX+' '+antPxY;
+    for(var j=0;j<upperPts.length;j++) bp+=' L'+upperPts[j].x.toFixed(1)+' '+upperPts[j].y.toFixed(1);
+    bp+=' L'+lowerPts[lowerPts.length-1].x.toFixed(1)+' '+lowerPts[lowerPts.length-1].y.toFixed(1);
+    for(var j=lowerPts.length-1;j>=0;j--) bp+=' L'+lowerPts[j].x.toFixed(1)+' '+lowerPts[j].y.toFixed(1);
+    bp+=' Z';
+    s+='<path d="'+bp+'" fill="#f5c542" fill-opacity="0.12" stroke="none" clip-path="url(#vc)"/>';
+
+    // Beam edges
+    var uL='M'+antPxX+' '+antPxY;
+    for(var j=0;j<upperPts.length;j++) uL+=' L'+upperPts[j].x.toFixed(1)+' '+upperPts[j].y.toFixed(1);
+    s+='<path d="'+uL+'" fill="none" stroke="#f5c542" stroke-width="0.8" opacity="0.7" clip-path="url(#vc)"/>';
+
+    var lL='M'+antPxX+' '+antPxY;
+    for(var j=0;j<lowerPts.length;j++) lL+=' L'+lowerPts[j].x.toFixed(1)+' '+lowerPts[j].y.toFixed(1);
+    s+='<path d="'+lL+'" fill="none" stroke="#f5c542" stroke-width="0.8" opacity="0.7" clip-path="url(#vc)"/>';
+
+    // Boresight
+    s+='<line x1="'+antPxX+'" y1="'+antPxY+'" x2="'+(R+2)+'" y2="'+toY(beamE(maxDist*1.02,tanBore))+'" stroke="#f5c542" stroke-width="0.5" stroke-dasharray="6 4" opacity="0.4" clip-path="url(#vc)"/>';
+
+    // Hit marker
+    if(hitDist!==null){
+      var hx=toX(hitDist),hy=toY(beamE(hitDist,tanLower));
+      s+='<circle cx="'+hx.toFixed(1)+'" cy="'+hy.toFixed(1)+'" r="4" fill="none" stroke="#ff6b4a" stroke-width="1.5"/>';
+      s+='<text x="'+(hx+8).toFixed(1)+'" y="'+(hy-8).toFixed(1)+'" fill="#ff6b4a" font-family="JetBrains Mono,monospace" font-size="11">Lower edge hits ground: '+(hitDist/1000).toFixed(1)+' km</text>';
+    }
+
+    // Antenna
+    s+='<line x1="'+antPxX+'" y1="'+toY(elev_m[0])+'" x2="'+antPxX+'" y2="'+antPxY+'" stroke="#c8d6e5" stroke-width="1.5"/>';
+    s+='<circle cx="'+antPxX+'" cy="'+antPxY+'" r="3" fill="#f5c542"/>';
+    s+='<path d="M'+(antPxX-5)+' '+(antPxY-5)+' L'+antPxX+' '+(antPxY-12)+' L'+(antPxX+5)+' '+(antPxY-5)+'" fill="none" stroke="#f5c542" stroke-width="1.2"/>';
+
+    // Labels
+    var labels=[
+      {d:4000,text:'Cascades'},{d:19500,text:'Snohomish'},{d:35000,text:'Lowlands'},
+      {d:52000,text:'Puget Sound'},{d:62000,text:'Kitsap Pen.'},{d:73500,text:'Hood Canal'}
+    ];
+    for(var k=0;k<labels.length;k++){
+      var lb=labels[k];
+      var lx=toX(lb.d);
+      var idx=0;
+      for(var m=0;m<dist_m.length;m++){if(dist_m[m]>=lb.d){idx=m;break;}}
+      var be=Math.max(0,elev_m[idx]);
+      s+='<text x="'+lx+'" y="'+(toY(be)+14)+'" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">'+lb.text+'</text>';
+    }
+
+    s+='<text x="'+R+'" y="'+(T+12)+'" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">'+exag+'× vert. exag. — beam geometry is true-angle</text>';
+
+    document.getElementById('svg').innerHTML=s;
+
+    var info=document.getElementById('info');
+    var hitStr=hitDist!==null?'Lower beam edge meets terrain at <strong style="color:#e8f0f8">'+(hitDist/1000).toFixed(1)+' km</strong>. ':'Lower beam edge clears all terrain in view. ';
+    info.innerHTML=hitStr
+      +'Antenna at <strong style="color:#e8f0f8">'+Math.round(antElevASL)+' m ASL</strong> ('+Math.round(elev_m[0])+'m ground + '+antHt+'m tower). '
+      +'Beam: upper '+(tiltDeg+bwDeg/2).toFixed(1)+'°, boresight '+tiltDeg.toFixed(1)+'°, lower '+(tiltDeg-bwDeg/2).toFixed(1)+'° from horizontal.';
+  }
+
+  render();
+  </script>
+
+  <div class="warning-box">
+    <h3>NOTE ON VERTICAL EXAGGERATION</h3>
+    <p>The default view uses 15× vertical exaggeration so you can actually see the terrain features. Drag the exaggeration slider down to 1× to see the <em>true</em> aspect ratio — the beam becomes an almost invisible sliver and the Cascades look like a gentle bump. That's the honest reality of a 15° beam across 76 km.</p>
+  </div>
+
+  <div class="page-footer">
+    Elevation data from USGS National Map. Visualization assumes line-of-sight propagation only — no refraction, diffraction, or atmospheric effects.
+  </div>
