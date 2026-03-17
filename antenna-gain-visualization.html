@@ -9,13 +9,13 @@ description: What a 9 dBi antenna beam actually looks like against real terrain
 
   <div class="tldr-box">
     <h3>TL;DR</h3>
-    <p>Those simplified antenna diagrams with two fat ovals? They're lying to you. A 9 dBi antenna with a 15° beamwidth produces a <em>razor-thin wedge</em> — not a bubble. This page overlays a geometrically correct beam pattern on real USGS elevation data from a site in the Cascades heading west to the Puget Sound, so you can see what the coverage actually looks like against terrain.</p>
+    <p>Those simplified antenna diagrams with two fat ovals? They're lying to you. A high-gain omni with a 15° vertical beamwidth covers far more terrain than those diagrams imply — the narrow beam shoots out across the landscape as a thin wedge that interacts with terrain in ways the simplified view completely hides. This page overlays a geometrically correct beam pattern on real USGS elevation data from a site in the Cascades heading west to the Puget Sound, so you can see what the coverage actually looks like against terrain.</p>
   </div>
 
   <div class="section-label">The Problem With Simplified Diagrams</div>
-  <p class="prose">You've seen the image: two roughly equal ellipses sitting side by side, one labeled "9 dBi" — as if a directional antenna just squishes an omnidirectional pattern into a slightly longer oval. That diagram gets the <em>concept</em> right (gain concentrates energy in one direction) but the <em>scale</em> catastrophically wrong.</p>
+  <p class="prose">You've seen the image: two roughly equal ellipses sitting side by side, one labeled "9 dBi" — as if a high-gain omni just squishes the vertical pattern into a slightly flatter oval. That diagram gets the <em>concept</em> right (gain concentrates energy by compressing the vertical beamwidth) but the <em>scale</em> catastrophically wrong.</p>
 
-  <p class="prose">At 9 dBi, the main lobe concentrates power at <strong>7.9× the density</strong> of an isotropic radiator — but only within a narrow cone. A 15° beamwidth means all that energy is packed into just 4.2% of the full circle. The isotropic "bubble" should be <em>tiny</em> compared to the lobe, not nearly the same size.</p>
+  <p class="prose">At 9 dBi, the main lobe concentrates power at <strong>7.9× the density</strong> of an isotropic radiator — by squeezing the vertical pattern into a narrow disk. A 15° vertical beamwidth means all that energy is packed into just 4.2% of the full vertical circle.</p>
 
   <div class="section-label">The Math</div>
   <p class="prose">From the antenna site at <code>47.809024, -121.727227</code> (elevation ~1,153 m in the Cascades), with a 30 m tower, the antenna sits at roughly 1,183 m ASL. With a 15° beamwidth pointed horizontally:</p>
@@ -31,7 +31,7 @@ description: What a 9 dBi antenna beam actually looks like against real terrain
       <div class="data-card-title local">HITS SEA LEVEL AT</div>
       <div class="data-card-number local">~9.0 km</div>
       <div class="data-card-label">1183 m / tan(7.5°)</div>
-      <div class="data-card-desc">Not 50 km. Not even close.</div>
+      <div class="data-card-desc"></div>
     </div>
     <div class="data-card">
       <div class="data-card-title summit">BEAM COVERAGE</div>
