@@ -1,0 +1,51 @@
+---
+layout: default
+title: Observer Room Server Firmware
+description: Browse and download observer room server firmware builds
+---
+
+<h1>Observer Room Server Firmware</h1>
+<p class="subtitle">Room server firmware with observer mode enabled — no bridging, just observe.</p>
+
+{% assign observer_files = site.static_files | where_exp: "f", "f.path contains '/firmware/observer/room-server/'" | sort: "path" %}
+
+{% assign current_dir = "" %}
+{% assign has_files = false %}
+
+{% for f in observer_files %}
+  {% assign parts = f.path | split: "/" %}
+  {% comment %}path looks like /firmware/observer/room-server/DeviceName/file.bin{% endcomment %}
+  {% if parts.size >= 6 %}
+    {% assign fname = parts | last %}
+    {% assign first_char = fname | slice: 0 %}
+    {% if first_char == "." %}
+      {% continue %}
+    {% endif %}
+    {% assign dir = parts[4] %}
+    {% if dir != current_dir %}
+      {% if current_dir != "" %}
+</ul>
+      {% endif %}
+      {% assign current_dir = dir %}
+<h3 class="dir-heading">{{ dir }}/</h3>
+<ul class="file-list">
+    {% endif %}
+    {% assign has_files = true %}
+  <li class="file-item">
+    <div class="file-info">
+      <svg class="file-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/></svg>
+      <span class="file-name">{{ fname }}</span>
+    </div>
+    <a href="{{ f.path | relative_url }}" class="file-download" download>Download</a>
+  </li>
+  {% endif %}
+{% endfor %}
+
+{% if has_files %}
+</ul>
+{% else %}
+<div class="empty-state">
+  <p>No observer room server firmware files yet.</p>
+  <p style="margin-top:0.5rem;font-size:0.85rem;">Add binary files to the <code>firmware/observer/room-server/</code> directory in the repository.</p>
+</div>
+{% endif %}
