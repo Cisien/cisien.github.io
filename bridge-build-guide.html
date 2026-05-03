@@ -273,7 +273,7 @@ description: Dual-radio bridge assembly guide for connecting backhaul and local 
     </div>
     <div class="pilot-step">
       <div class="pilot-num">3</div>
-      <div class="pilot-text"><strong>Flash using the MeshCore Flasher.</strong> Go to <a href="https://flasher.meshcore.co.uk/" target="_blank">flasher.meshcore.co.uk</a>, select your board type, then choose <strong>Custom Firmware</strong> and upload the file you downloaded. Follow the prompts to flash. Alternatively, for UF2 files, drag-and-drop onto the mass storage device.</div>
+      <div class="pilot-text"><strong>Flash using the MeshCore Flasher.</strong> Go to <a href="https://meshcore.io/flasher" target="_blank">meshcore.io/flasher</a>, select your board type, then choose <strong>Custom Firmware</strong> and upload the file you downloaded. Follow the prompts to flash. Alternatively, for UF2 files, drag-and-drop onto the mass storage device.</div>
     </div>
     <div class="pilot-step">
       <div class="pilot-num">4</div>
@@ -299,7 +299,7 @@ description: Dual-radio bridge assembly guide for connecting backhaul and local 
 <span class="cmd">set bridge.enabled</span> <span class="val">on</span>
 
 <span class="comment"># Bridge received packets (from RF) out to serial</span>
-<span class="cmd">set bridge.source</span> <span class="val">rx</span>
+<span class="cmd">set bridge.source</span> <span class="val">tx</span>
 
 <span class="comment"># Set baud rate — must match Radio 2</span>
 <span class="cmd">set bridge.baud</span> <span class="val">115200</span>
@@ -325,7 +325,7 @@ description: Dual-radio bridge assembly guide for connecting backhaul and local 
 <span class="cmd">set bridge.enabled</span> <span class="val">on</span>
 
 <span class="comment"># Bridge received packets (from RF) out to serial</span>
-<span class="cmd">set bridge.source</span> <span class="val">rx</span>
+<span class="cmd">set bridge.source</span> <span class="val">tx</span>
 
 <span class="comment"># Set baud rate — must match Radio 1</span>
 <span class="cmd">set bridge.baud</span> <span class="val">115200</span>
@@ -450,4 +450,3 @@ description: Dual-radio bridge assembly guide for connecting backhaul and local 
     Companion guide to <a href="https://cisien.github.io/meshcore-backhaul.html">Fixing Our Mesh Congestion Problem</a> — the backhaul architecture proposal.<br/>
     Built by the community. Polished with the help of AI.
   </div>
-
