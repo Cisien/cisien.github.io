@@ -1,0 +1,123 @@
+---
+layout: default
+title: 910.1/500 Test Report
+description: Field test results from operating MeshCore at 500kHz bandwidth on 910.100 MHz
+---
+
+  <h1>910.1/500 Test Report</h1>
+  <p class="subtitle">Field test results from operating MeshCore at 500kHz bandwidth on 910.100 MHz</p>
+
+  <div class="tldr-box">
+    <h3>TL;DR</h3>
+    <p>Nodes with clear line-of-sight maintained connectivity at 500kHz bandwidth with usable SNR down to -5 dB. A significant portion of the mesh lost or degraded connectivity, with the most severe impact in dense urban areas. The test did not produce a clean pass or fail — it produced a distribution of outcomes that depends heavily on node position and local density.</p>
+  </div>
+
+  <div class="section-label">Test Parameters</div>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin: 1.5rem 0 2.5rem;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Frequency</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--accent-local);">910.100</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 0.4rem;">MHz</div>
+    </div>
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Bandwidth</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--accent-local);">500</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 0.4rem;">kHz</div>
+    </div>
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Spreading Factor</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--accent-local);">7</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 0.4rem;">same as 62.5kHz preset</div>
+    </div>
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Coding Rate</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--accent-local);">5 / 7</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 0.4rem;">two values tested</div>
+    </div>
+  </div>
+
+  <p class="prose">The test operated a subset of the Puget Sound MeshCore mesh at 910.100 MHz with 500kHz bandwidth and SF7, matching the spreading factor already in use on the 62.5kHz mesh. Coding rates of 5 and 7 were tested. The goal was to determine whether the existing mesh density is sufficient to support the wider channel without requiring a change to the spreading factor.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Motivation</div>
+  <p class="prose">Meshtastic and some regional MeshCore meshes are operating at 500kHz bandwidth, citing FCC regulations that limit transmitted power for devices in certain operating bands. The wider channel also changes the capacity characteristics of the shared frequency. This test was run to establish whether the Puget Sound mesh can absorb that change at the current node density, or whether it cannot.</p>
+
+  <div class="section-label">Hypothesis</div>
+  <p class="prose">The Puget Sound MeshCore mesh is dense enough to support 500kHz bandwidth using the same spreading factor settings (SF7) currently used on the 62.5kHz channel. If the density is sufficient, nodes should maintain connectivity without requiring a lower spreading factor to compensate for the reduced link budget that comes with the wider channel.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Findings</div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2rem;">
+    <div style="background: linear-gradient(135deg, #0f1a15 0%, #151c25 100%); border: 1px solid rgba(78,205,196,0.25); border-radius: 8px; padding: 1.5rem;">
+      <h3 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 1px;">Where it worked</h3>
+      <ul style="font-size: 0.9rem; line-height: 1.8; padding-left: 1rem; color: var(--text);">
+        <li>Nodes with clear line-of-sight to repeaters maintained connectivity throughout the test.</li>
+        <li>SNR was usable at values as low as <strong style="color: var(--text-bright);">-5 dB</strong>. This is below the typical -2 to -4 dB floor seen at 62.5kHz, but still within the decoder's functional range.</li>
+        <li>The reduction in SNR was consistent with the expected ~3 dB penalty from moving from 62.5kHz to 500kHz bandwidth at the same spreading factor.</li>
+        <li>The existing 62.5kHz mesh remained operational when key repeater sites were taken offline for the test. Connectivity was degraded in the affected areas, but the mesh did not fail — it continued to route around the offline sites.</li>
+      </ul>
+    </div>
+    <div style="background: linear-gradient(135deg, #1a1015 0%, #151c25 100%); border: 1px solid rgba(255,107,74,0.25); border-radius: 8px; padding: 1.5rem;">
+      <h3 style="font-family: 'JetBrains Mono', monospace; color: #ff6b4a; font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 1px;">Where it did not</h3>
+      <ul style="font-size: 0.9rem; line-height: 1.8; padding-left: 1rem; color: var(--text);">
+        <li>A large number of sites lost connectivity entirely during the test window.</li>
+        <li>Additional sites experienced degraded reliability — intermittent delivery, increased latency, and more frequent retransmissions.</li>
+        <li>The degradation was concentrated in the urban core. Sites in the city experienced the worst outcomes. This is consistent with the expectation that multipath and RF clutter in dense environments reduce effective link margin further.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Testing Difficulties</div>
+  <p class="prose">Two factors limited the quality of the data collected during this test.</p>
+  <div class="objection-card">
+    <div class="q">Participation duration</div>
+    <div class="a">Individual node operators were not willing or able to keep their devices on the test settings for the full test duration. This reduced the effective density of the test mesh below the density of the production mesh, which is the condition the test was designed to evaluate. The results therefore reflect a lower-density scenario than the production mesh would present under the same settings.</div>
+  </div>
+  <div class="objection-card">
+    <div class="q">Baseline assumptions</div>
+    <div class="a">Some participants did not observe or dispute the issues that motivated the test — specifically the regulatory exposure from current settings and the congestion and capacity limits visible on the 62.5kHz channel. Where a participant did not perceive a problem with the existing configuration, the incentive to participate in a test of an alternative was reduced.</div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Assessment</div>
+  <p class="prose">500kHz bandwidth does not work for all nodes in the Puget Sound mesh at the current density and node placement. The outcome is not uniform: it varies by site, and the variance is driven by line-of-sight quality and local RF environment. A node on a hilltop with clear sightlines to two repeaters will behave very differently from a node in a city apartment with one marginal repeater link. Both are operating the same settings. The test does not support a blanket deployment of 910.1/500 across the entire mesh without additional work.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Options Going Forward</div>
+  <p class="prose">Three options are on the table. Each has tradeoffs. None is free.</p>
+
+  <div class="objection-card">
+    <div class="q">Option 1 — Do nothing</div>
+    <div class="a">Keep the current mesh settings. Address FCC compliance and congestion issues reactively as they arise.<br/><br/>
+    <strong style="color: var(--text-bright);">Risk:</strong> Continued operation outside FCC power limits is a regulatory exposure for every node on the mesh. The congestion issue is measurable and visible on observer nodes that receive signals from a large area of the region. Deferring both problems does not reduce them. It removes the time pressure to act on them, which is the only immediate benefit.</div>
+  </div>
+  <div class="objection-card">
+    <div class="q">Option 2 — Deploy 910.1/500 side-by-side with the existing mesh</div>
+    <div class="a">Each repeater site deploys two radios: one on 500kHz, one on 62.5kHz. The two meshes operate in parallel.<br/><br/>
+    <strong style="color: var(--text-bright);">Cost:</strong> Every repeater site adds a second radio, antenna, and power supply. Complexity increases for every site operator.<br/>
+    <strong style="color: var(--text-bright);">Limitation:</strong> The 500kHz mesh will have dead pockets in areas where the test showed coverage loss. The 62.5kHz mesh remains in place, so the congestion problem on that channel is not addressed. Users on the 62.5kHz side see no improvement. The net effect is higher cost and complexity without resolving either the regulatory or the congestion issue.</div>
+  </div>
+  <div class="objection-card">
+    <div class="q">Option 3 — Deploy 910.1/500 on mountain repeaters and selected intermediary sites</div>
+    <div class="a">Mountain repeaters move to the 500kHz settings. A smaller set of intermediary sites — positioned to have line-of-sight to both the mountain repeaters and the local mesh — act as bridges between the two layers. The 62.5kHz mesh continues to operate locally.<br/><br/>
+    <strong style="color: var(--text-bright);">Benefit:</strong> Most of the congested traffic moves to the new channel. The 62.5kHz channel sees reduced load as the high-traffic summit nodes leave it.<br/>
+    <strong style="color: var(--text-bright);">Migration path:</strong> As repeater density on 500kHz builds naturally, users migrate to the new mesh at their own pace. The 62.5kHz mesh can sunset when sufficient coverage exists on 500kHz.<br/>
+    <strong style="color: var(--text-bright);">Residual risk:</strong> Bridge operators remain on 62.5kHz and retain the regulatory exposure that the test was meant to address. The complexity is concentrated in a small number of sites rather than distributed across all repeaters.</div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">What I'm Doing</div>
+  <p class="prose">The mesh is operated by hundreds of individuals, each with their own goals, risk tolerance, and standards. There is no single decision that applies to all of them. This is a fact, not a defect.</p>
+  <p class="prose">I am moving my repeaters and devices to the 910.1/500 settings long-term and deploying Option 3. This is a personal decision for my nodes and sites. It does not represent a consensus position for the mesh as a whole, and it does not require anyone else to change anything.</p>
+
+  <hr class="divider"/>
+
+  <div class="page-footer">
+    Field test report — Puget Sound MeshCore, 910.100 MHz / 500 kHz / SF7
+  </div>
