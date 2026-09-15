@@ -1,0 +1,339 @@
+---
+layout: default
+title: FCC Rules for 902–928 MHz & LoRa Chirp Spread Spectrum
+description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–928 MHz — the 500 kHz bandwidth floor, power limits by bandwidth, out-of-band rules, and a glossary linked to the eCFR.
+---
+
+  <h1>FCC Rules for 902–928 MHz — and Where LoRa Chirp Spread Spectrum Fits</h1>
+  <p class="subtitle">What 47 CFR 15.247 actually permits in the 900 MHz ISM band, and how LoRa's CSS chirp maps onto the bandwidth and power limits — including why 500 kHz matters and 62.5 kHz doesn't.</p>
+
+  <div class="tldr-box">
+    <h3>TL;DR</h3>
+    <p>The FCC regulates <strong>902–928 MHz</strong> almost entirely through <a href="https://www.ecfr.gov/current/title-47/section-15.247">47 CFR §15.247</a>. It is technology-neutral: the rules never say "LoRa" or "chirp spread spectrum." They regulate by <strong>bandwidth and channel structure</strong>. A LoRa chirp is treated as a <em>digitally modulated intentional radiator</em>, which requires a <strong>6 dB bandwidth of at least 500 kHz</strong> to qualify — and caps power at <strong>1 W</strong>. A 62.5 kHz chirp falls <em>below</em> that floor, so a single narrowband LoRa carrier does not clear the rule on its own; it would have to be a frequency-hopping system using at least 50 channels to qualify at all. That 500 kHz line is the whole game for LoRa in the 900 MHz band.</p>
+  </div>
+
+  <p class="prose">This is a reference. Every figure is pulled from the current U.S. Code of Federal Regulations (<a href="https://www.ecfr.gov/current/title-47/part-15">eCFR, Part 15</a>) as of September 2026, and every citation links to its section. The one thing that surprises people: LoRa has <em>no special category</em> in the rules. What looks like a "spread spectrum license" is really just the bandwidth test in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a>. Read that line and most of the rest of this page falls out of it.</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">1. The governing sections (902–928 MHz)</h2>
+  <p class="prose">The sections that do the work, all linked to the eCFR:</p>
+
+  <table class="bom-table">
+    <thead>
+      <tr><th>Citation</th><th>Title</th><th>What it covers</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.247">47 CFR 15.247</a></td>
+        <td>Operation within 902–928 MHz, 2400–2483.5 MHz, 5725–5850 MHz</td>
+        <td><strong>Primary rule</strong> — the bandwidth, hopping, power, and spectral limits for unlicensed 902–928 MHz.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.249">47 CFR 15.249</a></td>
+        <td>Operation within 902–928 MHz, 2400–2483.5 MHz, 5725–5875 MHz, 24.0–24.25 GHz</td>
+        <td>Older/alternative provision; 50 mV/m fundamental field strength at 3 m.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.245">47 CFR 15.245</a></td>
+        <td>Operation within 902–928 MHz, 2435–2465 MHz, etc.</td>
+        <td>Field disturbance sensors (radar) only in 902–928 MHz.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.205">47 CFR 15.205</a></td>
+        <td>Restricted bands of operation</td>
+        <td>Bands where only spurious emissions are permitted; restricted-band compliance.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.209">47 CFR 15.209</a></td>
+        <td>Radiated emission limits; general requirements</td>
+        <td>Out-of-band / spurious field-strength limits at 3 m.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.3">47 CFR 15.3</a></td>
+        <td>Definitions</td>
+        <td>Intentional radiator, unintentional radiator, harmful interference.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-2.1">47 CFR 2.1</a></td>
+        <td>Definitions (Part 2)</td>
+        <td>Spread spectrum, frequency hopping, direct sequence, time hopping, hybrid.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.35">47 CFR 15.35</a></td>
+        <td>Measurement provisions</td>
+        <td>Peak emission limiting, detector selection, measurement frequency range.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-1.1307">47 CFR 1.1307</a> / <a href="https://www.ecfr.gov/current/title-47/section-1.1310">1.1310</a></td>
+        <td>RF radiation exposure (MPE)</td>
+        <td>Mandatory for all Part 15 intentional radiators.</td>
+      </tr>
+      <tr>
+        <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-2.1091">47 CFR 2.1091</a> / <a href="https://www.ecfr.gov/current/title-47/section-2.1093">2.1093</a></td>
+        <td>MPE limits and measurement methods</td>
+        <td>Applies to mobile/portable devices.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">2. What the FCC means by "spread spectrum"</h2>
+  <p class="prose">These definitions live in <a href="https://www.ecfr.gov/current/title-47/section-2.1">47 CFR §2.1</a> (Part 2), not Part 15. The classic processing-gain-based "spread spectrum transmission" / "frequency hopping transmission" definitions that used to sit in <a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3</a> have been <em>removed</em> from the current Part 15. What remains:</p>
+
+  <div class="info-box">
+    <h3>Spread Spectrum Systems</h3>
+    <p>A spread spectrum system is an information-bearing communications system in which: (1) information is conveyed by modulation of a carrier by some conventional means; (2) the bandwidth is deliberately widened by means of a spreading function over that which would be needed to transmit the information alone. (In some spread spectrum systems, a portion of the information being conveyed may be contained in the spreading function.)</p>
+  </div>
+
+  <div class="info-box">
+    <h3>Frequency Hopping Systems</h3>
+    <p>A spread spectrum system in which the carrier is modulated with the coded information in a conventional manner, causing a conventional spreading of the RF energy about the frequency carrier. The frequency of the carrier is not fixed but changes at fixed intervals under the direction of a coded sequence. The wide RF bandwidth is produced by the hopping sequence, not required by the information.</p>
+  </div>
+
+  <div class="info-box">
+    <h3>Direct Sequence Systems</h3>
+    <p>A spread spectrum system in which the carrier has been modulated by a high-speed spreading code and an information data stream. The high-speed code sequence dominates the "modulating function" and is the direct cause of the wide spreading of the transmitted signal.</p>
+  </div>
+
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Also in <a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a>: <em>Time Hopping Systems</em> and <em>Hybrid Spread Spectrum Systems</em> (combinations of direct sequence, frequency hopping, time hopping, and pulsed FM).</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">3. How LoRa chirp spread spectrum fits in</h2>
+  <p class="prose"><strong>LoRa is a chirp spread spectrum (CSS) physical layer.</strong> It encodes data as chirps — linear sweeps in frequency whose slope and duration carry the symbol. LoRaWAN is the network protocol on top; "LoRa" is the modulation. The FCC rules do not recognize "chirp" as a category, so a LoRa signal is classified by the same two paths that classify <em>any</em> unlicensed 902–928 MHz transmitter:</p>
+
+  <ul class="prose" style="line-height:1.9;">
+    <li><strong>Digital modulation path</strong> — <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a>: the 6 dB bandwidth must be <strong>at least 500 kHz</strong>.</li>
+    <li><strong>Frequency hopping path</strong> — <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(1)</a>: a set of hopping channels with minimum channel separation, minimum channel count, and max occupancy per frequency.</li>
+  </ul>
+
+  <p class="prose">A standard LoRa transmission is a <em>single chirp on a single channel</em>. That makes it a "digitally modulated intentional radiator," not a hopping system. So it lands on the digital path, and the single binding constraint is the <strong>500 kHz minimum 6 dB bandwidth</strong>. This is the entire compliance question for LoRa in 902–928 MHz, and it's what the next two sections make concrete.</p>
+
+  <div class="warning-box">
+    <h3>Why 62.5 kHz is the problem</h3>
+    <p style="font-size:0.9rem;line-height:1.7;">At low spreading factors and wide channels, a LoRa chirp occupies 500 kHz or more and clears <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a> comfortably. But at SF12 with a 62.5 kHz channel, the chirp's 6 dB bandwidth is <em>far below</em> the 500 kHz floor. A single 62.5 kHz LoRa carrier is a <strong>narrowband emission that does not qualify as a digital-modulation system under §15.247(a)(2)</strong>, and it is not a frequency-hopping system either. To qualify at that bandwidth it would have to hop across at least 50 channels (the rule forces ≥50 channels whenever the 20 dB channel bandwidth is under 250 kHz). This is the real-world tension: narrowband LoRa in the US 900 MHz band sits below the regulatory floor that wideband LoRa satisfies. Networks that want clean compliance stay on wide channels.</p>
+  </div>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">4. Power limits, by bandwidth (902–928 MHz)</h2>
+  <p class="prose">All limits in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)</a> are <strong>peak conducted output power</strong> at the transmitter. The same 902–928 MHz band gives you very different ceilings depending on bandwidth and channel structure:</p>
+
+  <table class="bom-table">
+    <thead>
+      <tr><th>Bandwidth / structure</th><th>Path under §15.247</th><th>Power limit</th><th>Extra constraint</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="part-name">≥ 500 kHz (6 dB BW)</td>
+        <td>Digital modulation — §15.247(a)(2)</td>
+        <td class="price">1 W (30 dBm)</td>
+        <td>PSD ≤ 8 dBm in any 3 kHz band</td>
+      </tr>
+      <tr>
+        <td class="part-name">20 dB BW ≥ 250 kHz, hopping, 25–49 channels</td>
+        <td>Frequency hopping — §15.247(a)(1)(i), (b)(2)</td>
+        <td class="price">0.25 W</td>
+        <td>≤ 0.4 s occupancy in 10 s</td>
+      </tr>
+      <tr>
+        <td class="part-name">Hopping, ≥ 50 channels (any BW &lt; 500 kHz)</td>
+        <td>Frequency hopping — §15.247(a)(1)(i), (b)(2)</td>
+        <td class="price">1 W</td>
+        <td>≤ 0.4 s occupancy in 20 s (BW &lt; 250 kHz)</td>
+      </tr>
+      <tr>
+        <td class="part-name">62.5 kHz, single carrier</td>
+        <td>— (below the 500 kHz digital floor; not a hopping system)</td>
+        <td class="price">Not permitted as a single channel</td>
+        <td>Must hop across ≥ 50 channels to qualify at 1 W</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">The 500 kHz row is the LoRa case. Note the 0.25 W tier is only reachable when the 20 dB channel bandwidth is at least 250 kHz — below that, the rule forces ≥ 50 channels, which puts you back on the 1 W tier.</p>
+
+  <div class="info-box">
+    <h3>Alternative digital measurement — §15.247(b)(3)</h3>
+    <p>Compliance with the 1 W digital limit may instead be shown using <strong>Maximum Conducted Output Power</strong> — total transmit power delivered to all antennas/elements, averaged across all symbols in the signaling alphabet at maximum power control, summed across all antennas, excluding intervals where the transmitter is off or at reduced power. If you meet the power limit this way (RMS averaging), the out-of-band attenuation requirement in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(d)</a> tightens from 20 dB to 30 dB.</p>
+  </div>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">5. Antenna gain in 902–928 MHz</h2>
+  <p class="prose">The power limits assume antennas with <strong>directional gain ≤ 6 dBi</strong> (<a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)(4)</a>). If you go higher, reduce conducted power by the amount in dB that the gain exceeds 6 dBi — one-for-one. Unlike the 2.4 GHz and 5.8 GHz bands, <strong>902–928 MHz has no fixed point-to-point antenna-gain relaxation</strong>: the 1 dB-per-3 dB (2.4 GHz) and no-reduction (5.8 GHz) provisions in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(c)</a> apply only to those other bands. In the 900 MHz band, directional gain is simply a 1:1 power trade.</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">6. Out-of-band and spectral limits</h2>
+  <p class="prose"><strong>Out-of-band attenuation — §15.247(d):</strong> in any <strong>100 kHz bandwidth outside</strong> the operating band, RF power shall be at least <strong>20 dB below</strong> the in-band level in the 100 kHz containing the highest power. For digital systems compliant via RMS averaging, it's <strong>30 dB</strong>. Emissions landing in restricted bands (<a href="https://www.ecfr.gov/current/title-47/section-15.205">§15.205</a>) must also meet the <a href="https://www.ecfr.gov/current/title-47/section-15.209">§15.209</a> limits.</p>
+
+  <p class="prose"><strong>Power spectral density (digital) — §15.247(e):</strong> conducted PSD to the antenna shall not exceed <strong>8 dBm in any 3 kHz band</strong> during continuous transmission. For a wide chirp this is usually a non-issue; for a narrow 62.5 kHz chirp it's a tighter relative constraint on peak power.</p>
+
+  <p class="prose"><strong>General radiated emission limits — §15.209:</strong> out-of-band / spurious field strength at 3 m:</p>
+  <table class="bom-table">
+    <thead>
+      <tr><th>Frequency</th><th>Field strength</th><th>Distance</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="part-name">216–960 MHz</td>
+        <td class="price">200 µV/m (quasi-peak)</td>
+        <td>3 m</td>
+      </tr>
+      <tr>
+        <td class="part-name">Above 960 MHz</td>
+        <td class="price">500 µV/m (average)</td>
+        <td>3 m</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Unwanted emissions shall not exceed the fundamental emission level.</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">7. Bandwidth summary (902–928 MHz)</h2>
+  <table class="bom-table">
+    <thead>
+      <tr><th>Parameter</th><th>Frequency hopping</th><th>Digital modulation (LoRa)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="part-name">Min 6 dB bandwidth</td>
+        <td>— (use 20 dB BW)</td>
+        <td class="price">≥ 500 kHz</td>
+      </tr>
+      <tr>
+        <td class="part-name">Max 20 dB channel BW</td>
+        <td class="price">500 kHz</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="part-name">Min channel separation</td>
+        <td class="price">25 kHz or 20 dB BW (whichever greater)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="part-name">Min hopping channels</td>
+        <td class="price">50 (BW &lt; 250 kHz) or 25 (BW ≥ 250 kHz)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="part-name">Max occupancy / frequency</td>
+        <td class="price">0.4 s in 20 s (BW &lt; 250 kHz) or 10 s (BW ≥ 250 kHz)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="part-name">PSD limit</td>
+        <td>—</td>
+        <td class="price">≤ 8 dBm in any 3 kHz band</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">8. Other mandatory compliance</h2>
+  <ul class="prose" style="line-height:1.9;">
+    <li><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(i)</a> — RF radiation exposure per <a href="https://www.ecfr.gov/current/title-47/section-1.1307">§1.1307(b)</a>, <a href="https://www.ecfr.gov/current/title-47/section-1.1310">§1.1310</a>, <a href="https://www.ecfr.gov/current/title-47/section-2.1091">§2.1091</a>, <a href="https://www.ecfr.gov/current/title-47/section-2.1093">§2.1093</a>. Mobile/portable devices need an MPE compliance statement in the equipment authorization application.</li>
+    <li><a href="https://www.ecfr.gov/current/title-47/section-15.205">§15.205(c)</a> — all intentional radiators in 902–928 MHz are subject to restricted-band rules for any out-of-band emissions landing in restricted bands.</li>
+    <li><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(h)</a> — 902–928 MHz is shared on a <strong>noninterference basis</strong> with critical Government systems, many airborne radars. The FCC notes it may reduce power limits in the future.</li>
+    <li><a href="https://www.ecfr.gov/current/title-47/section-15.21">§15.21</a> — the user manual must warn that unapproved modifications void the user's authority to operate.</li>
+  </ul>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">9. §15.249 (legacy / alternative)</h2>
+  <p class="prose"><a href="https://www.ecfr.gov/current/title-47/section-15.249">§15.249</a> still permits 902–928 MHz operation with a <strong>fundamental field strength of 50 mV/m at 3 m</strong> and harmonics ≤ 500 µV/m, without the spread-spectrum or digital-modulation structure of §15.247. Most modern unlicensed 900 MHz devices — including LoRa radios — are certified under <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247</a>, not §15.249. If you're designing new hardware, treat §15.247 as the governing path.</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">Glossary</h2>
+  <p class="prose">Key terms, each linked to where it's defined or applied in the eCFR:</p>
+  <table class="bom-table">
+    <thead>
+      <tr><th>Term</th><th>Meaning</th><th>Source</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="part-name">Intentional radiator</td>
+        <td>A device that intentionally generates and emits RF energy by radiation or induction.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3(o)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Unintentional radiator</td>
+        <td>A device that generates RF energy for internal use or by conduction to associated equipment, not intended to emit by radiation.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3(z)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Spread spectrum system</td>
+        <td>A communications system where bandwidth is deliberately widened by a spreading function beyond what the information alone requires.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Frequency hopping system</td>
+        <td>A spread spectrum system whose carrier frequency changes at fixed intervals under a coded sequence.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Direct sequence system</td>
+        <td>A spread spectrum system where a high-speed code dominates the modulating function and spreads the signal.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Digital modulation</td>
+        <td>The §15.247(a)(2) operating path; requires 6 dB bandwidth ≥ 500 kHz in 902–928 MHz. LoRa chirps fall here.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">6 dB bandwidth</td>
+        <td>The width of a signal measured between the points 6 dB below its peak. The digital-modulation floor is set at 500 kHz.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">20 dB bandwidth</td>
+        <td>Signal width between the points 20 dB below the peak; used for hopping channel separation and the 500 kHz channel cap.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(1)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Peak conducted output power</td>
+        <td>The maximum conducted power at the transmitter during the peak of a transmission — the basis for the 1 W / 0.25 W limits.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Maximum Conducted Output Power</td>
+        <td>Total transmit power averaged across all symbols at max power control; an alternative way to show 1 W digital compliance.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)(3)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Power spectral density (PSD) limit</td>
+        <td>For digital systems, conducted PSD to the antenna ≤ 8 dBm in any 3 kHz band.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(e)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Out-of-band emission</td>
+        <td>Emission outside the band; must be 20 dB (30 dB digital) below in-band over any 100 kHz bandwidth.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(d)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Restricted band</td>
+        <td>A frequency band where only spurious emissions are permitted from an intentional radiator.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.205">§15.205</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Spurious emission</td>
+        <td>Emission on frequencies outside the necessary bandwidth that can be reduced without affecting the transmitted information.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3</a> / <a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">Harmful interference</td>
+        <td>Emission that endangers a safety/navigation service or seriously degrades a radiocommunications service.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3(m)</a></td>
+      </tr>
+      <tr>
+        <td class="part-name">MPE (Maximum Permissible Exposure)</td>
+        <td>RF radiation exposure limits; all Part 15 intentional radiators must comply, with mobile/portable requiring a compliance statement.</td>
+        <td><a href="https://www.ecfr.gov/current/title-47/section-1.1307">§1.1307</a>, <a href="https://www.ecfr.gov/current/title-47/section-1.1310">§1.1310</a>, <a href="https://www.ecfr.gov/current/title-47/section-2.1091">§2.1091</a>, <a href="https://www.ecfr.gov/current/title-47/section-2.1093">§2.1093</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <h3>Source citations</h3>
+    <p style="font-size:0.85rem;line-height:1.9;color:var(--text-dim);">
+      <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.249">§15.249</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.245">§15.245</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.205">§15.205</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.209">§15.209</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.35">§15.35</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-15.21">§15.21</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-1.1307">§1.1307</a> ·
+      <a href="https://www.ecfr.gov/current/title-47/section-1.1310">§1.1310</a>
+    </p>
+    <p style="font-size:0.8rem;line-height:1.7;color:var(--text-dim);margin-top:1rem;">Quoted from the eCFR as of September 2026. The LoRa discussion is an interpretation of how a CSS chirp maps onto the bandwidth-based rules — the rules themselves are technology-neutral. This page is for reference and does not constitute regulatory advice; verify against the current text before relying on it for a design or certification.</p>
+  </div>
