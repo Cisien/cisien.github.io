@@ -1,18 +1,41 @@
 ---
 layout: default
 title: FCC Rules for 902–928 MHz & LoRa Chirp Spread Spectrum
-description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–928 MHz — the 500 kHz bandwidth floor, power limits by bandwidth, out-of-band rules, and a glossary linked to the eCFR.
+description: A plain-English guide to the FCC rules that LoRa/Meshtastic radios in 902–928 MHz must follow — why 500 kHz is the floor, why 62.5 kHz isn't allowed, and every citation linked to the eCFR.
 ---
 
   <h1>FCC Rules for 902–928 MHz — and Where LoRa Chirp Spread Spectrum Fits</h1>
-  <p class="subtitle">What 47 CFR 15.247 actually permits in the 900 MHz ISM band, and how LoRa's CSS chirp maps onto the bandwidth and power limits — including why 500 kHz matters and 62.5 kHz doesn't.</p>
+  <p class="subtitle">A plain-English guide to what 47 CFR 15.247 actually requires of a LoRa/Meshtastic radio in the 900 MHz ISM band — why 500 kHz is the floor, why 62.5 kHz isn't allowed, and the full citation list linked to the eCFR.</p>
 
   <div class="tldr-box">
     <h3>TL;DR</h3>
-    <p>The FCC regulates <strong>902–928 MHz</strong> almost entirely through <a href="https://www.ecfr.gov/current/title-47/section-15.247">47 CFR §15.247</a>. It is technology-neutral: the rules never say "LoRa" or "chirp spread spectrum." They regulate by <strong>bandwidth and channel structure</strong>. A LoRa chirp is treated as a <em>digitally modulated intentional radiator</em>, which requires a <strong>6 dB bandwidth of at least 500 kHz</strong> to qualify — and caps power at <strong>1 W</strong>. A 62.5 kHz chirp falls <em>below</em> that floor, so a single narrowband LoRa carrier does not clear the rule on its own; it would have to be a frequency-hopping system using at least 50 channels to qualify at all. That 500 kHz line is the whole game for LoRa in the 900 MHz band.</p>
+    <p>The FCC regulates <strong>902–928 MHz</strong> almost entirely through <a href="https://www.ecfr.gov/current/title-47/section-15.247">47 CFR §15.247</a>. The rules are technology-neutral: they never say "LoRa." They regulate by <strong>bandwidth and power</strong>. A LoRa chirp is a <em>digitally modulated intentional radiator</em>, and that path requires a <strong>6 dB bandwidth of at least 500 kHz</strong> to qualify, with power capped at <strong>1 W</strong>. A 62.5 kHz LoRa channel is a <em>narrowband</em> transmission that falls <em>below</em> that floor — it is not legal as a single channel in this band. The reason is the power-density limit: at 1 W, a 62.5 kHz signal packs ~17 dBm into any 3 kHz slice, more than double the FCC's 8 dBm/3 kHz cap. A 500 kHz signal spreads that same watt thin enough to sit just under it.</p>
   </div>
 
-  <p class="prose">This is a reference. Every figure is pulled from the current U.S. Code of Federal Regulations (<a href="https://www.ecfr.gov/current/title-47/part-15">eCFR, Part 15</a>) as of September 2026, and every citation links to its section. The one thing that surprises people: LoRa has <em>no special category</em> in the rules. What looks like a "spread spectrum license" is really just the bandwidth test in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a>. Read that line and most of the rest of this page falls out of it.</p>
+  <p class="prose">This page is written for two readers: someone who's never read an FCC regulation and wants to understand <em>what's going on</em>, and someone who needs the exact section numbers to check a design. The summary below skips the legal style; the rest is the cited detail. Every figure is from the current U.S. Code of Federal Regulations (<a href="https://www.ecfr.gov/current/title-47/part-15">eCFR, Part 15</a>) as of September 2026, and every citation links to its section.</p>
+
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">Summary: what the rules say, in plain English</h2>
+
+  <p class="prose"><strong>The setup.</strong> 902–928 MHz is "license-free" (the FCC calls it an <em>ISM band</em>, Industrial, Scientific, and Medical). That does <em>not</em> mean "use it however you want." It means the FCC doesn't issue you a personal license, but it <em>does</em> set strict limits on how much power you can put out and how wide you must spread it, so that a pile of unlicensed radios don't drown out the <em>licensed</em> services that share or sit next to this band — and don't break into each other. The FCC's operating assumption is: <strong>anyone's transmitter can land on the same frequency as anyone else's, at any time, with no coordination.</strong> Every limit below is built to survive that assumption.</p>
+
+  <p class="prose"><strong>The one number that matters: bandwidth.</strong> For a digital transmitter like LoRa, <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a> says your signal's <em>6 dB bandwidth</em> — the width where the signal drops 6 dB from its peak — must be <strong>at least 500 kHz</strong>. A LoRa radio is a single chirp on one channel, so this bandwidth test is essentially its entire compliance question.</p>
+
+  <div class="info-box">
+    <h3>Why 62.5 kHz isn't allowed — the letter</h3>
+    <p>Read the rule straight: <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a> sets a hard floor of 500 kHz on the 6 dB bandwidth of any digitally modulated transmission in 902–928 MHz. A 62.5 kHz LoRa channel does not meet that floor. There is no exemption and no "narrowband digital" category. A signal that narrow can only enter this band as a <em>frequency-hopping</em> system spread over at least 50 channels — which LoRa and Meshtastic are not. So on the letter, 62.5 kHz is simply outside what the rule authorizes.</p>
+  </div>
+
+  <div class="info-box">
+    <h3>Why 62.5 kHz isn't allowed — the spirit</h3>
+    <p>The deeper reason is interference. The 500 kHz floor exists because of the FCC's <strong>power-density limit</strong> in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(e)</a>: no more than <strong>8 dBm in any 3 kHz slice</strong> of your transmission. Do the math. A 1 W transmitter spread across 62.5 kHz concentrates ~17 dBm into every 3 kHz slice — <em>9 dB over</em> the cap. A 1 W transmitter spread across 500 kHz puts only ~7.8 dBm into each 3 kHz slice — just under it. A narrow channel is a narrow beam: all your power is jammed into a small piece of spectrum, and it lands on whatever's there — a licensed service, a neighboring amateur, another wideband user. Spreading your power thin (a wide channel) is what keeps any single slice of spectrum below the level where you'd interfere with a licensed or sensitive user.</p>
+  </div>
+
+  <div class="info-box">
+    <h3>The counter-intuitive part: why "wider = safer"</h3>
+    <p>It feels backwards: doesn't a wider signal interfere with <em>more</em> of the spectrum? The intuition assumes your power stays the same and just spills into more channels. The FCC rule inverts that: <strong>total power is capped (1 W) no matter how wide you are.</strong> So widening the channel doesn't add power anywhere — it divides the same watt across more hertz. The result is a <em>lower power spectral density</em>: less power crowded into any narrow slice. And it's specifically the narrow slices that hurt other users, because their receivers are tuned to narrow bands. A 62.5 kHz signal is a loud point in a quiet room; a 500 kHz signal is a softer wash that no single narrowband receiver sees as a big spike. That's exactly why the FCC forces the wider channel — and why 500 kHz is roughly the narrowest channel that still lets you push the full 1 W while staying under the 8 dBm/3 kHz density cap.</p>
+  </div>
+
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Bottom line for LoRa/Meshtastic: run wide channels (500 kHz) and you're in the clear at up to 1 W. Narrow channels below 500 kHz don't just hit the power-density wall — they're a category the rule doesn't provide for in this band. That's why most U.S. LoRaWAN plans center on the 500 kHz-wide channels.</p>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">1. The governing sections (902–928 MHz)</h2>
   <p class="prose">The sections that do the work, all linked to the eCFR:</p>
@@ -25,7 +48,7 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
       <tr>
         <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.247">47 CFR 15.247</a></td>
         <td>Operation within 902–928 MHz, 2400–2483.5 MHz, 5725–5850 MHz</td>
-        <td><strong>Primary rule</strong> — the bandwidth, hopping, power, and spectral limits for unlicensed 902–928 MHz.</td>
+        <td><strong>Primary rule</strong> — the bandwidth, power, and spectral limits for unlicensed 902–928 MHz.</td>
       </tr>
       <tr>
         <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.249">47 CFR 15.249</a></td>
@@ -55,7 +78,7 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
       <tr>
         <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-2.1">47 CFR 2.1</a></td>
         <td>Definitions (Part 2)</td>
-        <td>Spread spectrum, frequency hopping, direct sequence, time hopping, hybrid.</td>
+        <td>Spread spectrum, direct sequence, frequency hopping.</td>
       </tr>
       <tr>
         <td class="part-name"><a href="https://www.ecfr.gov/current/title-47/section-15.35">47 CFR 15.35</a></td>
@@ -76,7 +99,7 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
   </table>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">2. What the FCC means by "spread spectrum"</h2>
-  <p class="prose">These definitions live in <a href="https://www.ecfr.gov/current/title-47/section-2.1">47 CFR §2.1</a> (Part 2), not Part 15. The classic processing-gain-based "spread spectrum transmission" / "frequency hopping transmission" definitions that used to sit in <a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3</a> have been <em>removed</em> from the current Part 15. What remains:</p>
+  <p class="prose">These definitions live in <a href="https://www.ecfr.gov/current/title-47/section-2.1">47 CFR §2.1</a> (Part 2), not Part 15. The classic processing-gain-based definitions that used to sit in <a href="https://www.ecfr.gov/current/title-47/section-15.3">§15.3</a> have been removed from current Part 15. What remains:</p>
 
   <div class="info-box">
     <h3>Spread Spectrum Systems</h3>
@@ -84,68 +107,52 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
   </div>
 
   <div class="info-box">
-    <h3>Frequency Hopping Systems</h3>
-    <p>A spread spectrum system in which the carrier is modulated with the coded information in a conventional manner, causing a conventional spreading of the RF energy about the frequency carrier. The frequency of the carrier is not fixed but changes at fixed intervals under the direction of a coded sequence. The wide RF bandwidth is produced by the hopping sequence, not required by the information.</p>
-  </div>
-
-  <div class="info-box">
     <h3>Direct Sequence Systems</h3>
-    <p>A spread spectrum system in which the carrier has been modulated by a high-speed spreading code and an information data stream. The high-speed code sequence dominates the "modulating function" and is the direct cause of the wide spreading of the transmitted signal.</p>
+    <p>A spread spectrum system in which the carrier has been modulated by a high-speed spreading code and an information data stream. The high-speed code sequence dominates the "modulating function" and is the direct cause of the wide spreading of the transmitted signal. A LoRa chirp sits in this family — it spreads the carrier over a wide band with a coded sweep.</p>
   </div>
 
-  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Also in <a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a>: <em>Time Hopping Systems</em> and <em>Hybrid Spread Spectrum Systems</em> (combinations of direct sequence, frequency hopping, time hopping, and pulsed FM).</p>
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Also in <a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a>: <em>Frequency Hopping Systems</em> (carrier changes frequency at fixed intervals under a coded sequence) and <em>Hybrid Spread Spectrum Systems</em>. The hopping family is the other legal path into this band; the next section explains why it doesn't apply to LoRa.</p>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">3. How LoRa chirp spread spectrum fits in</h2>
-  <p class="prose"><strong>LoRa is a chirp spread spectrum (CSS) physical layer.</strong> It encodes data as chirps — linear sweeps in frequency whose slope and duration carry the symbol. LoRaWAN is the network protocol on top; "LoRa" is the modulation. The FCC rules do not recognize "chirp" as a category, so a LoRa signal is classified by the same two paths that classify <em>any</em> unlicensed 902–928 MHz transmitter:</p>
+  <p class="prose"><strong>LoRa is a chirp spread spectrum (CSS) physical layer.</strong> It encodes data as chirps — linear sweeps in frequency whose slope and duration carry the symbol. LoRaWAN is the network protocol on top; "LoRa" is the modulation. The FCC rules do not recognize "chirp" as a category, so a LoRa signal is classified by the same paths that classify <em>any</em> unlicensed 902–928 MHz transmitter:</p>
 
   <ul class="prose" style="line-height:1.9;">
     <li><strong>Digital modulation path</strong> — <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a>: the 6 dB bandwidth must be <strong>at least 500 kHz</strong>.</li>
-    <li><strong>Frequency hopping path</strong> — <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(1)</a>: a set of hopping channels with minimum channel separation, minimum channel count, and max occupancy per frequency.</li>
+    <li><strong>Frequency hopping path</strong> — <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(1)</a>: a set of hopping channels.</li>
   </ul>
 
-  <p class="prose">A standard LoRa transmission is a <em>single chirp on a single channel</em>. That makes it a "digitally modulated intentional radiator," not a hopping system. So it lands on the digital path, and the single binding constraint is the <strong>500 kHz minimum 6 dB bandwidth</strong>. This is the entire compliance question for LoRa in 902–928 MHz, and it's what the next two sections make concrete.</p>
-
-  <div class="warning-box">
-    <h3>Why 62.5 kHz is the problem</h3>
-    <p style="font-size:0.9rem;line-height:1.7;">At low spreading factors and wide channels, a LoRa chirp occupies 500 kHz or more and clears <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a> comfortably. But at SF12 with a 62.5 kHz channel, the chirp's 6 dB bandwidth is <em>far below</em> the 500 kHz floor. A single 62.5 kHz LoRa carrier is a <strong>narrowband emission that does not qualify as a digital-modulation system under §15.247(a)(2)</strong>, and it is not a frequency-hopping system either. To qualify at that bandwidth it would have to hop across at least 50 channels (the rule forces ≥50 channels whenever the 20 dB channel bandwidth is under 250 kHz). This is the real-world tension: narrowband LoRa in the US 900 MHz band sits below the regulatory floor that wideband LoRa satisfies. Networks that want clean compliance stay on wide channels.</p>
-  </div>
+  <p class="prose">A standard LoRa transmission is a <em>single chirp on a single channel</em>. That makes it a "digitally modulated intentional radiator," not a hopping system. So it lands on the digital path, and the single binding constraint is the <strong>500 kHz minimum 6 dB bandwidth</strong>. That is the whole compliance question for LoRa and Meshtastic in 902–928 MHz. A 62.5 kHz channel is simply below that floor — a narrowband emission that doesn't qualify on this path and isn't a hopping system either.</p>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">4. Power limits, by bandwidth (902–928 MHz)</h2>
-  <p class="prose">All limits in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)</a> are <strong>peak conducted output power</strong> at the transmitter. The same 902–928 MHz band gives you very different ceilings depending on bandwidth and channel structure:</p>
+  <p class="prose">All limits in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)</a> are <strong>peak conducted output power</strong> at the transmitter. For LoRa/Meshtastic (single-channel, digital), the relevant picture is:</p>
 
   <table class="bom-table">
     <thead>
-      <tr><th>Bandwidth / structure</th><th>Path under §15.247</th><th>Power limit</th><th>Extra constraint</th></tr>
+      <tr><th>Bandwidth (6 dB BW)</th><th>Legal as digital?</th><th>Power limit</th><th>Why</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td class="part-name">≥ 500 kHz (6 dB BW)</td>
-        <td>Digital modulation — §15.247(a)(2)</td>
+        <td class="part-name">≥ 500 kHz</td>
+        <td>Yes — §15.247(a)(2)</td>
         <td class="price">1 W (30 dBm)</td>
-        <td>PSD ≤ 8 dBm in any 3 kHz band</td>
+        <td>Clears the 500 kHz floor; PSD stays under 8 dBm/3 kHz</td>
       </tr>
       <tr>
-        <td class="part-name">20 dB BW ≥ 250 kHz, hopping, 25–49 channels</td>
-        <td>Frequency hopping — §15.247(a)(1)(i), (b)(2)</td>
-        <td class="price">0.25 W</td>
-        <td>≤ 0.4 s occupancy in 10 s</td>
+        <td class="part-name">500 kHz → up</td>
+        <td>Yes</td>
+        <td class="price">1 W (30 dBm)</td>
+        <td>Wider than the floor only lowers PSD further</td>
       </tr>
       <tr>
-        <td class="part-name">Hopping, ≥ 50 channels (any BW &lt; 500 kHz)</td>
-        <td>Frequency hopping — §15.247(a)(1)(i), (b)(2)</td>
-        <td class="price">1 W</td>
-        <td>≤ 0.4 s occupancy in 20 s (BW &lt; 250 kHz)</td>
-      </tr>
-      <tr>
-        <td class="part-name">62.5 kHz, single carrier</td>
-        <td>— (below the 500 kHz digital floor; not a hopping system)</td>
+        <td class="part-name">125 kHz, 62.5 kHz, etc.</td>
+        <td>No — below the floor</td>
         <td class="price">Not permitted as a single channel</td>
-        <td>Must hop across ≥ 50 channels to qualify at 1 W</td>
+        <td>PSD exceeds 8 dBm/3 kHz at 1 W; only legal as a hopping system (≥ 50 channels), which LoRa is not</td>
       </tr>
     </tbody>
   </table>
 
-  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">The 500 kHz row is the LoRa case. Note the 0.25 W tier is only reachable when the 20 dB channel bandwidth is at least 250 kHz — below that, the rule forces ≥ 50 channels, which puts you back on the 1 W tier.</p>
+  <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">The 500 kHz line is where 1 W and the 8 dBm/3 kHz power-density cap meet. Anything narrower can't carry a full watt without blowing the density limit — which is why the rule makes 500 kHz the floor rather than an arbitrary number.</p>
 
   <div class="info-box">
     <h3>Alternative digital measurement — §15.247(b)(3)</h3>
@@ -153,12 +160,12 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
   </div>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">5. Antenna gain in 902–928 MHz</h2>
-  <p class="prose">The power limits assume antennas with <strong>directional gain ≤ 6 dBi</strong> (<a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)(4)</a>). If you go higher, reduce conducted power by the amount in dB that the gain exceeds 6 dBi — one-for-one. Unlike the 2.4 GHz and 5.8 GHz bands, <strong>902–928 MHz has no fixed point-to-point antenna-gain relaxation</strong>: the 1 dB-per-3 dB (2.4 GHz) and no-reduction (5.8 GHz) provisions in <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(c)</a> apply only to those other bands. In the 900 MHz band, directional gain is simply a 1:1 power trade.</p>
+  <p class="prose">The power limits assume antennas with <strong>directional gain ≤ 6 dBi</strong> (<a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)(4)</a>). If you go higher, reduce conducted power by the amount in dB that the gain exceeds 6 dBi — one-for-one. Unlike the 2.4 GHz and 5.8 GHz bands, <strong>902–928 MHz has no fixed point-to-point antenna-gain relaxation</strong>. Directional gain in the 900 MHz band is simply a 1:1 power trade.</p>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">6. Out-of-band and spectral limits</h2>
   <p class="prose"><strong>Out-of-band attenuation — §15.247(d):</strong> in any <strong>100 kHz bandwidth outside</strong> the operating band, RF power shall be at least <strong>20 dB below</strong> the in-band level in the 100 kHz containing the highest power. For digital systems compliant via RMS averaging, it's <strong>30 dB</strong>. Emissions landing in restricted bands (<a href="https://www.ecfr.gov/current/title-47/section-15.205">§15.205</a>) must also meet the <a href="https://www.ecfr.gov/current/title-47/section-15.209">§15.209</a> limits.</p>
 
-  <p class="prose"><strong>Power spectral density (digital) — §15.247(e):</strong> conducted PSD to the antenna shall not exceed <strong>8 dBm in any 3 kHz band</strong> during continuous transmission. For a wide chirp this is usually a non-issue; for a narrow 62.5 kHz chirp it's a tighter relative constraint on peak power.</p>
+  <p class="prose"><strong>Power spectral density (digital) — §15.247(e):</strong> conducted PSD to the antenna shall not exceed <strong>8 dBm in any 3 kHz band</strong> during continuous transmission. This is the limit that makes the 500 kHz floor what it is.</p>
 
   <p class="prose"><strong>General radiated emission limits — §15.209:</strong> out-of-band / spurious field strength at 3 m:</p>
   <table class="bom-table">
@@ -180,41 +187,31 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
   </table>
   <p class="prose" style="font-size:0.85rem;color:var(--text-dim);">Unwanted emissions shall not exceed the fundamental emission level.</p>
 
-  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">7. Bandwidth summary (902–928 MHz)</h2>
+  <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">7. Bandwidth summary (902–928 MHz, digital/CSS)</h2>
   <table class="bom-table">
     <thead>
-      <tr><th>Parameter</th><th>Frequency hopping</th><th>Digital modulation (LoRa)</th></tr>
+      <tr><th>Parameter</th><th>Requirement</th></tr>
     </thead>
     <tbody>
       <tr>
         <td class="part-name">Min 6 dB bandwidth</td>
-        <td>— (use 20 dB BW)</td>
         <td class="price">≥ 500 kHz</td>
       </tr>
       <tr>
-        <td class="part-name">Max 20 dB channel BW</td>
-        <td class="price">500 kHz</td>
-        <td>—</td>
+        <td class="part-name">Peak conducted power</td>
+        <td class="price">1 W</td>
       </tr>
       <tr>
-        <td class="part-name">Min channel separation</td>
-        <td class="price">25 kHz or 20 dB BW (whichever greater)</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td class="part-name">Min hopping channels</td>
-        <td class="price">50 (BW &lt; 250 kHz) or 25 (BW ≥ 250 kHz)</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td class="part-name">Max occupancy / frequency</td>
-        <td class="price">0.4 s in 20 s (BW &lt; 250 kHz) or 10 s (BW ≥ 250 kHz)</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td class="part-name">PSD limit</td>
-        <td>—</td>
+        <td class="part-name">Power spectral density</td>
         <td class="price">≤ 8 dBm in any 3 kHz band</td>
+      </tr>
+      <tr>
+        <td class="part-name">Out-of-band attenuation</td>
+        <td class="price">≥ 20 dB (30 dB if using RMS-averaged power)</td>
+      </tr>
+      <tr>
+        <td class="part-name">Max antenna gain (no derate)</td>
+        <td class="price">6 dBi (reduce power 1:1 dB above this)</td>
       </tr>
     </tbody>
   </table>
@@ -228,7 +225,7 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
   </ul>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">9. §15.249 (legacy / alternative)</h2>
-  <p class="prose"><a href="https://www.ecfr.gov/current/title-47/section-15.249">§15.249</a> still permits 902–928 MHz operation with a <strong>fundamental field strength of 50 mV/m at 3 m</strong> and harmonics ≤ 500 µV/m, without the spread-spectrum or digital-modulation structure of §15.247. Most modern unlicensed 900 MHz devices — including LoRa radios — are certified under <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247</a>, not §15.249. If you're designing new hardware, treat §15.247 as the governing path.</p>
+  <p class="prose"><a href="https://www.ecfr.gov/current/title-47/section-15.249">§15.249</a> still permits 902–928 MHz operation with a <strong>fundamental field strength of 50 mV/m at 3 m</strong> and harmonics ≤ 500 µV/m, without the digital-modulation structure of §15.247. Most modern unlicensed 900 MHz devices — including LoRa radios — are certified under <a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247</a>, not §15.249. If you're designing new hardware, treat §15.247 as the governing path.</p>
 
   <h2 style="font-family: 'JetBrains Mono', monospace; color: #4ecdc4; font-size: 0.95rem; letter-spacing: 1px;">Glossary</h2>
   <p class="prose">Key terms, each linked to where it's defined or applied in the eCFR:</p>
@@ -253,11 +250,6 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
         <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
       </tr>
       <tr>
-        <td class="part-name">Frequency hopping system</td>
-        <td>A spread spectrum system whose carrier frequency changes at fixed intervals under a coded sequence.</td>
-        <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
-      </tr>
-      <tr>
         <td class="part-name">Direct sequence system</td>
         <td>A spread spectrum system where a high-speed code dominates the modulating function and spreads the signal.</td>
         <td><a href="https://www.ecfr.gov/current/title-47/section-2.1">§2.1</a></td>
@@ -273,13 +265,8 @@ description: How LoRa's chirp spread spectrum fits under 47 CFR 15.247 in 902–
         <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(2)</a></td>
       </tr>
       <tr>
-        <td class="part-name">20 dB bandwidth</td>
-        <td>Signal width between the points 20 dB below the peak; used for hopping channel separation and the 500 kHz channel cap.</td>
-        <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(a)(1)</a></td>
-      </tr>
-      <tr>
         <td class="part-name">Peak conducted output power</td>
-        <td>The maximum conducted power at the transmitter during the peak of a transmission — the basis for the 1 W / 0.25 W limits.</td>
+        <td>The maximum conducted power at the transmitter during the peak of a transmission — the basis for the 1 W limit.</td>
         <td><a href="https://www.ecfr.gov/current/title-47/section-15.247">§15.247(b)</a></td>
       </tr>
       <tr>
