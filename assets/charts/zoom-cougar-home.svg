@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300">
+<title>Cougar Mountain → home repeater · 909–913 MHz</title>
+<rect x="500.9" y="36" width="109.5" height="228" fill="#4ecdc4" fill-opacity="0.16"/>
+<line x1="555.7" y1="36" x2="555.7" y2="264" stroke="#4ecdc4" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="52.0" y1="36" x2="52.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="52.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">909</text>
+<line x1="271.0" y1="36" x2="271.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="271.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">910</text>
+<line x1="490.0" y1="36" x2="490.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="490.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">911</text>
+<line x1="709.0" y1="36" x2="709.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="709.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">912</text>
+<line x1="928.0" y1="36" x2="928.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="928.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">913</text>
+<line x1="52" y1="264.0" x2="928" y2="264.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="267.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0%</text>
+<line x1="52" y1="218.4" x2="928" y2="218.4" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="221.4" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">20%</text>
+<line x1="52" y1="172.8" x2="928" y2="172.8" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="175.8" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">40%</text>
+<line x1="52" y1="127.2" x2="928" y2="127.2" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="130.2" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">60%</text>
+<line x1="52" y1="81.6" x2="928" y2="81.6" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="84.6" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">80%</text>
+<line x1="52" y1="36.0" x2="928" y2="36.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="39.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">100%</text>
+<text x="936" y="258.6" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-12 dB</text>
+<text x="936" y="224.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-8 dB</text>
+<text x="936" y="191.0" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-4 dB</text>
+<text x="936" y="157.2" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0 dB</text>
+<text x="936" y="123.4" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">4 dB</text>
+<text x="936" y="89.7" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">8 dB</text>
+<text x="936" y="55.9" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">12 dB</text>
+<polyline fill="none" stroke="#4ecdc4" stroke-width="1.6" points="52.0,70.2 73.9,36.0 95.8,47.4 117.7,36.0 139.6,36.0 161.5,36.0 183.4,47.4 205.3,47.4 227.2,36.0 249.1,36.0 271.0,47.4 292.9,36.0 314.8,47.4 336.7,47.4 358.6,36.0 380.5,47.4 402.4,47.4 424.3,58.8 446.2,36.0 468.1,36.0 490.0,47.4 511.9,47.4 533.8,70.2 555.7,36.0 577.6,47.4 599.5,36.0 621.4,47.4 643.3,47.4 665.2,36.0 687.1,58.8 709.0,47.4 730.9,36.0 752.8,252.6 774.7,36.0 796.6,47.4 818.5,70.2 840.4,47.4 862.3,36.0 884.2,36.0 906.1,70.2 928.0,58.8"/>
+<polyline fill="none" stroke="#7c9cff" stroke-width="1.6" points="52.0,58.8 73.9,58.8 95.8,36.0 117.7,47.4 139.6,36.0 161.5,58.8 183.4,58.8 205.3,58.8 227.2,58.8 249.1,47.4 271.0,36.0 292.9,36.0 314.8,58.8 336.7,47.4 358.6,47.4 380.5,47.4 402.4,47.4 424.3,47.4 446.2,81.6 468.1,58.8 490.0,47.4 511.9,58.8 533.8,36.0 555.7,58.8 577.6,70.2 599.5,81.6 621.4,70.2 643.3,70.2 665.2,58.8 687.1,36.0 709.0,58.8 730.9,58.8 752.8,47.4 774.7,70.2 796.6,58.8 818.5,58.8 840.4,47.4 862.3,47.4 884.2,81.6 906.1,58.8 928.0,93.0"/>
+<polyline fill="none" stroke="#ff6b4a" stroke-width="1.6" points="52.0,70.2 73.9,81.6 95.8,70.2 117.7,93.0 139.6,58.8 161.5,150.0 183.4,58.8 205.3,81.6 227.2,58.8 249.1,81.6 271.0,104.4 292.9,58.8 314.8,58.8 336.7,81.6 358.6,58.8 380.5,70.2 402.4,58.8 424.3,58.8 446.2,70.2 468.1,104.4 490.0,47.4 511.9,58.8 533.8,58.8 555.7,47.4 577.6,70.2 599.5,93.0 621.4,264.0 643.3,115.8 665.2,93.0 687.1,47.4 709.0,47.4 730.9,58.8 752.8,58.8 774.7,70.2 796.6,264.0 818.5,47.4 840.4,47.4 862.3,70.2 884.2,81.6 906.1,104.4 928.0,58.8"/>
+<polyline fill="none" stroke="#f5c542" stroke-width="2" stroke-dasharray="5 4" points="52.0,84.6 73.9,87.7 95.8,79.3 117.7,78.2 139.6,78.2 161.5,63.4 183.4,65.6 205.3,59.2 227.2,63.4 249.1,65.6 271.0,65.6 292.9,67.7 314.8,65.6 336.7,67.7 358.6,69.8 380.5,61.3 402.4,87.7 424.3,88.8 446.2,63.4 468.1,75.1 490.0,74.0 511.9,86.7 533.8,82.4 555.7,84.6 577.6,80.3 599.5,103.6 621.4,83.5 643.3,69.8 665.2,88.8 687.1,80.3 709.0,89.8 730.9,93.0 752.8,67.7 774.7,74.0 796.6,71.9 818.5,67.7 840.4,63.4 862.3,80.3 884.2,77.2 906.1,238.7 928.0,67.7"/>
+<text x="555.7" y="48" text-anchor="middle" fill="#4ecdc4" font-family="JetBrains Mono,monospace" font-size="10">911.3 ±250 kHz</text>
+<text x="490.0" y="16" text-anchor="middle" fill="#e8f0f8" font-family="JetBrains Mono,monospace" font-size="12">Cougar Mountain → home repeater · 909–913 MHz</text>
+<text x="490.0" y="294" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">Center frequency (MHz)</text>
+<text x="14" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(-90 14 150.0)">Delivery</text>
+<text x="968" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(90 968 150.0)">SNR</text>
+<line x1="60" y1="58" x2="76" y2="58" stroke="#4ecdc4" stroke-width="2"/>
+<text x="80" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">1 B</text>
+<line x1="150" y1="58" x2="166" y2="58" stroke="#7c9cff" stroke-width="2"/>
+<text x="170" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">128 B</text>
+<line x1="240" y1="58" x2="256" y2="58" stroke="#ff6b4a" stroke-width="2"/>
+<text x="260" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">255 B</text>
+<line x1="330" y1="58" x2="346" y2="58" stroke="#f5c542" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="350" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">median SNR</text>
+</svg>

@@ -1,0 +1,355 @@
+---
+layout: default
+title: Finding a 500 kHz Channel
+description: Two-node survey of 902–915 MHz at 500 kHz, and why we selected 911.3 MHz for the next round of tests.
+---
+
+  <h1>Finding a 500 kHz Channel</h1>
+  <p class="subtitle">Two-node survey of 902–915 MHz at 500 kHz, and why we selected 911.3 MHz for the next round of tests.</p>
+
+  <div class="tldr-box">
+    <h3>TL;DR</h3>
+    <p>There isn’t a quiet channel in this band you can point at and say THERE. 911.3 MHz was more acceptable than most of the rest. It sits in the 909–913 MHz passband of typical filters. Delivery was good enough to keep using it: Cougar Mountain is a commercial site (34 dBm into 6 dBi, 5–6 dB of feedline/chain loss). My home repeater is a typical station — 27 dBm into 9 dBi.</p>
+    <p>SF changed the results more than CR. CR still helped. Long messages are less reliable than short ones, more than the 1-byte numbers suggest. Cougar transmits stronger than it receives. We already knew those last two; this put numbers on them. The size of the long-message drop was the surprise.</p>
+  </div>
+
+  <div class="section-label">Why this test</div>
+  <p class="prose">An earlier test ran part of the Puget Sound mesh at 910.1 MHz / 500 kHz / SF7. That was about whether the mesh can run a wider channel. This one is: if we’re going to keep testing 500 kHz and eventually switch, which frequency do we use. Most filters here are 909–913 MHz, not the whole ISM band.</p>
+  <p class="prose">Code: <a href="https://github.com/Cisien/meshcore-snr-sweep">meshcore-snr-sweep</a>. Two nodes, KISS modems, no mesh routing. Count packets that decoded and record SNR.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Testing Method</div>
+  <p class="prose">Two sites: Cougar Mountain (commercial radio site, 34 dBm into a 6 dBi antenna, 5–6 dB of loss in the full chain) and my home repeater (27 dBm, 9 dBi — a typical home station). Sweep center frequency in 100 kHz steps. At each center, send a fixed number of packets in both directions, for 1, 128, and 255 byte payloads. Delivery rate is received / sent. SNR is the median of packets that decoded.</p>
+  <p class="prose">Main runs: 500 kHz bandwidth, SF7 and SF8, CR 4/5 and 4/7. One extra SF8 / CR 4/8 pass on 910–912 MHz. Control: 62.5 kHz, SF7 / CR 4/5, 909–910 MHz — the settings the mesh already uses.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Full sweep (SF8 / CR 4/7 / 500 kHz)</div>
+  <p class="prose">902.3–913.0 MHz, 100 kHz steps. Cut at 913 MHz (filter passband). Teal band is 500 kHz centered on 911.3 MHz. Solid lines: 1 / 128 / 255 B delivery. Dashed: median SNR of decoded packets. 20 packets per cell.</p>
+  <svg style="width:100%;height:auto;display:block;background:#151c25;border:1px solid #2a3a4e;border-radius:8px;margin:0.8rem 0 1.2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300">
+<title>Cougar Mountain → home repeater · 902.3–913.0 MHz</title>
+<rect x="768.4" y="36" width="40.9" height="228" fill="#4ecdc4" fill-opacity="0.16"/>
+<line x1="788.8" y1="36" x2="788.8" y2="264" stroke="#4ecdc4" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="109.3" y1="36" x2="109.3" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="109.3" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">903</text>
+<line x1="191.2" y1="36" x2="191.2" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="191.2" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">904</text>
+<line x1="273.0" y1="36" x2="273.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="273.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">905</text>
+<line x1="354.9" y1="36" x2="354.9" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="354.9" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">906</text>
+<line x1="436.8" y1="36" x2="436.8" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="436.8" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">907</text>
+<line x1="518.7" y1="36" x2="518.7" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="518.7" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">908</text>
+<line x1="600.5" y1="36" x2="600.5" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="600.5" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">909</text>
+<line x1="682.4" y1="36" x2="682.4" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="682.4" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">910</text>
+<line x1="764.3" y1="36" x2="764.3" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="764.3" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">911</text>
+<line x1="846.1" y1="36" x2="846.1" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="846.1" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">912</text>
+<line x1="928.0" y1="36" x2="928.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="928.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">913</text>
+<line x1="52" y1="264.0" x2="928" y2="264.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="267.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0%</text>
+<line x1="52" y1="218.4" x2="928" y2="218.4" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="221.4" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">20%</text>
+<line x1="52" y1="172.8" x2="928" y2="172.8" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="175.8" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">40%</text>
+<line x1="52" y1="127.2" x2="928" y2="127.2" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="130.2" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">60%</text>
+<line x1="52" y1="81.6" x2="928" y2="81.6" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="84.6" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">80%</text>
+<line x1="52" y1="36.0" x2="928" y2="36.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="39.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">100%</text>
+<text x="936" y="258.6" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-12 dB</text>
+<text x="936" y="224.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-8 dB</text>
+<text x="936" y="191.0" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-4 dB</text>
+<text x="936" y="157.2" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0 dB</text>
+<text x="936" y="123.4" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">4 dB</text>
+<text x="936" y="89.7" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">8 dB</text>
+<text x="936" y="55.9" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">12 dB</text>
+<polyline fill="none" stroke="#4ecdc4" stroke-width="1.6" points="52.0,36.0 60.2,36.0 68.4,36.0 76.6,47.4 84.7,36.0 92.9,58.8 101.1,47.4 109.3,36.0 117.5,47.4 125.7,36.0 133.9,36.0 142.1,36.0 150.2,36.0 158.4,36.0 166.6,36.0 174.8,70.2 183.0,36.0 191.2,47.4 199.4,47.4 207.6,47.4 215.7,36.0 223.9,47.4 232.1,36.0 240.3,36.0 248.5,36.0 256.7,36.0 264.9,36.0 273.0,36.0 281.2,36.0 289.4,47.4 297.6,47.4 305.8,47.4 314.0,36.0 322.2,47.4 330.4,36.0 338.5,47.4 346.7,81.6 354.9,36.0 363.1,36.0 371.3,36.0 379.5,36.0 387.7,36.0 395.9,36.0 404.0,36.0 412.2,36.0 420.4,36.0 428.6,36.0 436.8,36.0 445.0,138.6 453.2,36.0 461.3,47.4 469.5,58.8 477.7,36.0 485.9,58.8 494.1,36.0 502.3,36.0 510.5,36.0 518.7,47.4 526.8,47.4 535.0,58.8 543.2,36.0 551.4,47.4 559.6,36.0 567.8,36.0 576.0,47.4 584.1,36.0 592.3,36.0 600.5,70.2 608.7,36.0 616.9,47.4 625.1,36.0 633.3,36.0 641.5,36.0 649.6,47.4 657.8,47.4 666.0,36.0 674.2,36.0 682.4,47.4 690.6,36.0 698.8,47.4 707.0,47.4 715.1,36.0 723.3,47.4 731.5,47.4 739.7,58.8 747.9,36.0 756.1,36.0 764.3,47.4 772.4,47.4 780.6,70.2 788.8,36.0 797.0,47.4 805.2,36.0 813.4,47.4 821.6,47.4 829.8,36.0 837.9,58.8 846.1,47.4 854.3,36.0 862.5,252.6 870.7,36.0 878.9,47.4 887.1,70.2 895.3,47.4 903.4,36.0 911.6,36.0 919.8,70.2 928.0,58.8"/>
+<polyline fill="none" stroke="#7c9cff" stroke-width="1.6" points="52.0,47.4 60.2,70.2 68.4,47.4 76.6,36.0 84.7,47.4 92.9,70.2 101.1,58.8 109.3,47.4 117.5,47.4 125.7,47.4 133.9,93.0 142.1,36.0 150.2,93.0 158.4,36.0 166.6,36.0 174.8,36.0 183.0,47.4 191.2,81.6 199.4,70.2 207.6,81.6 215.7,58.8 223.9,47.4 232.1,70.2 240.3,58.8 248.5,47.4 256.7,70.2 264.9,58.8 273.0,58.8 281.2,70.2 289.4,58.8 297.6,47.4 305.8,36.0 314.0,58.8 322.2,58.8 330.4,47.4 338.5,70.2 346.7,58.8 354.9,47.4 363.1,70.2 371.3,58.8 379.5,36.0 387.7,47.4 395.9,70.2 404.0,47.4 412.2,58.8 420.4,81.6 428.6,36.0 436.8,47.4 445.0,47.4 453.2,58.8 461.3,47.4 469.5,70.2 477.7,58.8 485.9,47.4 494.1,58.8 502.3,47.4 510.5,36.0 518.7,70.2 526.8,58.8 535.0,70.2 543.2,58.8 551.4,93.0 559.6,47.4 567.8,47.4 576.0,70.2 584.1,58.8 592.3,81.6 600.5,58.8 608.7,58.8 616.9,36.0 625.1,47.4 633.3,36.0 641.5,58.8 649.6,58.8 657.8,58.8 666.0,58.8 674.2,47.4 682.4,36.0 690.6,36.0 698.8,58.8 707.0,47.4 715.1,47.4 723.3,47.4 731.5,47.4 739.7,47.4 747.9,81.6 756.1,58.8 764.3,47.4 772.4,58.8 780.6,36.0 788.8,58.8 797.0,70.2 805.2,81.6 813.4,70.2 821.6,70.2 829.8,58.8 837.9,36.0 846.1,58.8 854.3,58.8 862.5,47.4 870.7,70.2 878.9,58.8 887.1,58.8 895.3,47.4 903.4,47.4 911.6,81.6 919.8,58.8 928.0,93.0"/>
+<polyline fill="none" stroke="#ff6b4a" stroke-width="1.6" points="52.0,115.8 60.2,47.4 68.4,70.2 76.6,47.4 84.7,104.4 92.9,58.8 101.1,58.8 109.3,47.4 117.5,70.2 125.7,36.0 133.9,70.2 142.1,81.6 150.2,70.2 158.4,36.0 166.6,47.4 174.8,81.6 183.0,93.0 191.2,104.4 199.4,81.6 207.6,93.0 215.7,81.6 223.9,58.8 232.1,36.0 240.3,36.0 248.5,70.2 256.7,58.8 264.9,58.8 273.0,81.6 281.2,70.2 289.4,36.0 297.6,58.8 305.8,58.8 314.0,47.4 322.2,70.2 330.4,70.2 338.5,58.8 346.7,104.4 354.9,70.2 363.1,58.8 371.3,81.6 379.5,47.4 387.7,58.8 395.9,70.2 404.0,47.4 412.2,81.6 420.4,93.0 428.6,47.4 436.8,81.6 445.0,58.8 453.2,58.8 461.3,58.8 469.5,115.8 477.7,138.6 485.9,93.0 494.1,70.2 502.3,36.0 510.5,70.2 518.7,47.4 526.8,70.2 535.0,58.8 543.2,161.4 551.4,58.8 559.6,104.4 567.8,81.6 576.0,81.6 584.1,93.0 592.3,36.0 600.5,70.2 608.7,81.6 616.9,70.2 625.1,93.0 633.3,58.8 641.5,150.0 649.6,58.8 657.8,81.6 666.0,58.8 674.2,81.6 682.4,104.4 690.6,58.8 698.8,58.8 707.0,81.6 715.1,58.8 723.3,70.2 731.5,58.8 739.7,58.8 747.9,70.2 756.1,104.4 764.3,47.4 772.4,58.8 780.6,58.8 788.8,47.4 797.0,70.2 805.2,93.0 813.4,264.0 821.6,115.8 829.8,93.0 837.9,47.4 846.1,47.4 854.3,58.8 862.5,58.8 870.7,70.2 878.9,264.0 887.1,47.4 895.3,47.4 903.4,70.2 911.6,81.6 919.8,104.4 928.0,58.8"/>
+<polyline fill="none" stroke="#f5c542" stroke-width="2" stroke-dasharray="5 4" points="52.0,67.7 60.2,63.4 68.4,76.1 76.6,63.4 84.7,82.4 92.9,59.2 101.1,65.6 109.3,61.3 117.5,63.4 125.7,67.7 133.9,67.7 142.1,70.8 150.2,67.7 158.4,71.9 166.6,61.3 174.8,99.3 183.0,83.5 191.2,88.8 199.4,76.1 207.6,105.7 215.7,91.9 223.9,70.8 232.1,82.4 240.3,83.5 248.5,72.9 256.7,63.4 264.9,68.7 273.0,74.0 281.2,76.1 289.4,69.8 297.6,86.7 305.8,82.4 314.0,88.8 322.2,76.1 330.4,94.1 338.5,78.2 346.7,77.2 354.9,87.7 363.1,80.3 371.3,71.9 379.5,76.1 387.7,65.6 395.9,65.6 404.0,66.6 412.2,71.9 420.4,71.9 428.6,78.2 436.8,67.7 445.0,75.1 453.2,83.5 461.3,74.0 469.5,84.6 477.7,65.6 485.9,67.7 494.1,65.6 502.3,69.8 510.5,82.4 518.7,76.1 526.8,74.0 535.0,76.1 543.2,74.0 551.4,71.9 559.6,67.7 567.8,65.6 576.0,82.4 584.1,82.4 592.3,76.1 600.5,84.6 608.7,87.7 616.9,79.3 625.1,78.2 633.3,78.2 641.5,63.4 649.6,65.6 657.8,59.2 666.0,63.4 674.2,65.6 682.4,65.6 690.6,67.7 698.8,65.6 707.0,67.7 715.1,69.8 723.3,61.3 731.5,87.7 739.7,88.8 747.9,63.4 756.1,75.1 764.3,74.0 772.4,86.7 780.6,82.4 788.8,84.6 797.0,80.3 805.2,103.6 813.4,83.5 821.6,69.8 829.8,88.8 837.9,80.3 846.1,89.8 854.3,93.0 862.5,67.7 870.7,74.0 878.9,71.9 887.1,67.7 895.3,63.4 903.4,80.3 911.6,77.2 919.8,238.7 928.0,67.7"/>
+<text x="788.8" y="48" text-anchor="middle" fill="#4ecdc4" font-family="JetBrains Mono,monospace" font-size="10">911.3 ±250 kHz</text>
+<text x="490.0" y="16" text-anchor="middle" fill="#e8f0f8" font-family="JetBrains Mono,monospace" font-size="12">Cougar Mountain → home repeater · 902.3–913.0 MHz</text>
+<text x="490.0" y="294" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">Center frequency (MHz)</text>
+<text x="14" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(-90 14 150.0)">Delivery</text>
+<text x="968" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(90 968 150.0)">SNR</text>
+<line x1="60" y1="58" x2="76" y2="58" stroke="#4ecdc4" stroke-width="2"/>
+<text x="80" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">1 B</text>
+<line x1="150" y1="58" x2="166" y2="58" stroke="#7c9cff" stroke-width="2"/>
+<text x="170" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">128 B</text>
+<line x1="240" y1="58" x2="256" y2="58" stroke="#ff6b4a" stroke-width="2"/>
+<text x="260" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">255 B</text>
+<line x1="330" y1="58" x2="346" y2="58" stroke="#f5c542" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="350" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">median SNR</text>
+</svg>
+  <svg style="width:100%;height:auto;display:block;background:#151c25;border:1px solid #2a3a4e;border-radius:8px;margin:0.8rem 0 1.2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300">
+<title>home repeater → Cougar Mountain · 902.3–913.0 MHz</title>
+<rect x="768.4" y="36" width="40.9" height="228" fill="#4ecdc4" fill-opacity="0.16"/>
+<line x1="788.8" y1="36" x2="788.8" y2="264" stroke="#4ecdc4" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="109.3" y1="36" x2="109.3" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="109.3" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">903</text>
+<line x1="191.2" y1="36" x2="191.2" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="191.2" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">904</text>
+<line x1="273.0" y1="36" x2="273.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="273.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">905</text>
+<line x1="354.9" y1="36" x2="354.9" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="354.9" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">906</text>
+<line x1="436.8" y1="36" x2="436.8" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="436.8" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">907</text>
+<line x1="518.7" y1="36" x2="518.7" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="518.7" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">908</text>
+<line x1="600.5" y1="36" x2="600.5" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="600.5" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">909</text>
+<line x1="682.4" y1="36" x2="682.4" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="682.4" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">910</text>
+<line x1="764.3" y1="36" x2="764.3" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="764.3" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">911</text>
+<line x1="846.1" y1="36" x2="846.1" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="846.1" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">912</text>
+<line x1="928.0" y1="36" x2="928.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="928.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">913</text>
+<line x1="52" y1="264.0" x2="928" y2="264.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="267.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0%</text>
+<line x1="52" y1="218.4" x2="928" y2="218.4" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="221.4" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">20%</text>
+<line x1="52" y1="172.8" x2="928" y2="172.8" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="175.8" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">40%</text>
+<line x1="52" y1="127.2" x2="928" y2="127.2" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="130.2" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">60%</text>
+<line x1="52" y1="81.6" x2="928" y2="81.6" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="84.6" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">80%</text>
+<line x1="52" y1="36.0" x2="928" y2="36.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="39.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">100%</text>
+<text x="936" y="240.2" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-12 dB</text>
+<text x="936" y="186.5" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-8 dB</text>
+<text x="936" y="132.9" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-4 dB</text>
+<text x="936" y="79.2" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0 dB</text>
+<polyline fill="none" stroke="#4ecdc4" stroke-width="1.6" points="52.0,47.4 60.2,58.8 68.4,47.4 76.6,58.8 84.7,58.8 92.9,47.4 101.1,47.4 109.3,58.8 117.5,58.8 125.7,58.8 133.9,47.4 142.1,36.0 150.2,47.4 158.4,58.8 166.6,58.8 174.8,81.6 183.0,138.6 191.2,93.0 199.4,104.4 207.6,104.4 215.7,104.4 223.9,58.8 232.1,70.2 240.3,58.8 248.5,36.0 256.7,58.8 264.9,47.4 273.0,70.2 281.2,58.8 289.4,127.2 297.6,115.8 305.8,161.4 314.0,138.6 322.2,138.6 330.4,172.8 338.5,127.2 346.7,161.4 354.9,127.2 363.1,150.0 371.3,104.4 379.5,70.2 387.7,93.0 395.9,70.2 404.0,47.4 412.2,81.6 420.4,93.0 428.6,58.8 436.8,138.6 445.0,93.0 453.2,115.8 461.3,127.2 469.5,127.2 477.7,138.6 485.9,127.2 494.1,104.4 502.3,115.8 510.5,81.6 518.7,81.6 526.8,138.6 535.0,81.6 543.2,104.4 551.4,58.8 559.6,70.2 567.8,104.4 576.0,115.8 584.1,127.2 592.3,104.4 600.5,93.0 608.7,115.8 616.9,127.2 625.1,93.0 633.3,127.2 641.5,93.0 649.6,70.2 657.8,70.2 666.0,36.0 674.2,58.8 682.4,81.6 690.6,70.2 698.8,58.8 707.0,138.6 715.1,127.2 723.3,104.4 731.5,115.8 739.7,150.0 747.9,104.4 756.1,47.4 764.3,47.4 772.4,104.4 780.6,70.2 788.8,47.4 797.0,81.6 805.2,36.0 813.4,81.6 821.6,58.8 829.8,47.4 837.9,47.4 846.1,47.4 854.3,81.6 862.5,93.0 870.7,93.0 878.9,58.8 887.1,36.0 895.3,70.2 903.4,58.8 911.6,81.6 919.8,58.8 928.0,47.4"/>
+<polyline fill="none" stroke="#7c9cff" stroke-width="1.6" points="52.0,81.6 60.2,81.6 68.4,104.4 76.6,58.8 84.7,104.4 92.9,115.8 101.1,70.2 109.3,81.6 117.5,104.4 125.7,70.2 133.9,81.6 142.1,58.8 150.2,104.4 158.4,81.6 166.6,81.6 174.8,184.2 183.0,229.8 191.2,218.4 199.4,241.2 207.6,207.0 215.7,195.6 223.9,172.8 232.1,115.8 240.3,161.4 248.5,115.8 256.7,127.2 264.9,127.2 273.0,138.6 281.2,195.6 289.4,229.8 297.6,207.0 305.8,252.6 314.0,229.8 322.2,207.0 330.4,241.2 338.5,241.2 346.7,229.8 354.9,241.2 363.1,207.0 371.3,184.2 379.5,161.4 387.7,161.4 395.9,93.0 404.0,104.4 412.2,104.4 420.4,172.8 428.6,195.6 436.8,172.8 445.0,150.0 453.2,241.2 461.3,207.0 469.5,241.2 477.7,218.4 485.9,207.0 494.1,150.0 502.3,229.8 510.5,195.6 518.7,207.0 526.8,207.0 535.0,184.2 543.2,184.2 551.4,172.8 559.6,218.4 567.8,195.6 576.0,218.4 584.1,229.8 592.3,229.8 600.5,229.8 608.7,218.4 616.9,184.2 625.1,229.8 633.3,195.6 641.5,195.6 649.6,138.6 657.8,127.2 666.0,138.6 674.2,104.4 682.4,70.2 690.6,81.6 698.8,150.0 707.0,172.8 715.1,195.6 723.3,218.4 731.5,241.2 739.7,172.8 747.9,150.0 756.1,115.8 764.3,81.6 772.4,138.6 780.6,184.2 788.8,81.6 797.0,138.6 805.2,138.6 813.4,172.8 821.6,207.0 829.8,150.0 837.9,161.4 846.1,93.0 854.3,150.0 862.5,127.2 870.7,161.4 878.9,161.4 887.1,138.6 895.3,161.4 903.4,104.4 911.6,161.4 919.8,184.2 928.0,241.2"/>
+<polyline fill="none" stroke="#ff6b4a" stroke-width="1.6" points="52.0,115.8 60.2,161.4 68.4,172.8 76.6,241.2 84.7,138.6 92.9,150.0 101.1,93.0 109.3,70.2 117.5,81.6 125.7,138.6 133.9,127.2 142.1,115.8 150.2,81.6 158.4,172.8 166.6,218.4 174.8,195.6 183.0,252.6 191.2,252.6 199.4,229.8 207.6,252.6 215.7,241.2 223.9,229.8 232.1,207.0 240.3,184.2 248.5,161.4 256.7,172.8 264.9,161.4 273.0,104.4 281.2,229.8 289.4,252.6 297.6,252.6 305.8,264.0 314.0,241.2 322.2,252.6 330.4,264.0 338.5,252.6 346.7,195.6 354.9,241.2 363.1,229.8 371.3,218.4 379.5,195.6 387.7,161.4 395.9,195.6 404.0,195.6 412.2,207.0 420.4,150.0 428.6,184.2 436.8,195.6 445.0,229.8 453.2,241.2 461.3,252.6 469.5,252.6 477.7,252.6 485.9,252.6 494.1,207.0 502.3,241.2 510.5,241.2 518.7,241.2 526.8,241.2 535.0,241.2 543.2,207.0 551.4,241.2 559.6,241.2 567.8,229.8 576.0,252.6 584.1,264.0 592.3,264.0 600.5,241.2 608.7,241.2 616.9,229.8 625.1,229.8 633.3,241.2 641.5,229.8 649.6,241.2 657.8,172.8 666.0,161.4 674.2,195.6 682.4,172.8 690.6,127.2 698.8,184.2 707.0,229.8 715.1,138.6 723.3,172.8 731.5,252.6 739.7,207.0 747.9,195.6 756.1,172.8 764.3,150.0 772.4,150.0 780.6,207.0 788.8,150.0 797.0,161.4 805.2,161.4 813.4,264.0 821.6,207.0 829.8,207.0 837.9,207.0 846.1,195.6 854.3,195.6 862.5,172.8 870.7,172.8 878.9,195.6 887.1,138.6 895.3,172.8 903.4,195.6 911.6,195.6 919.8,207.0 928.0,184.2"/>
+<polyline fill="none" stroke="#f5c542" stroke-width="2" stroke-dasharray="5 4" points="52.0,156.7 60.2,176.8 68.4,143.3 76.6,153.4 84.7,136.6 92.9,126.5 101.1,143.3 109.3,136.6 117.5,151.7 125.7,121.5 133.9,146.6 142.1,150.0 150.2,123.2 158.4,145.0 166.6,168.4 174.8,153.4 183.0,196.9 191.2,191.9 199.4,180.2 207.6,195.3 215.7,193.6 223.9,183.5 232.1,153.4 240.3,171.8 248.5,151.7 256.7,166.8 264.9,166.8 273.0,153.4 281.2,186.9 289.4,171.8 297.6,173.5 305.8,200.3 314.0,195.3 322.2,200.3 330.4,207.0 338.5,200.3 346.7,181.9 354.9,190.2 363.1,190.2 371.3,166.8 379.5,180.2 387.7,153.4 395.9,150.0 404.0,160.1 412.2,160.1 420.4,156.7 428.6,180.2 436.8,180.2 445.0,168.4 453.2,190.2 461.3,223.8 469.5,183.5 477.7,202.0 485.9,193.6 494.1,183.5 502.3,190.2 510.5,181.9 518.7,193.6 526.8,168.4 535.0,203.6 543.2,175.1 551.4,166.8 559.6,180.2 567.8,166.8 576.0,205.3 584.1,210.4 592.3,176.8 600.5,203.6 608.7,203.6 616.9,176.8 625.1,186.9 633.3,190.2 641.5,163.4 649.6,176.8 657.8,178.5 666.0,185.2 674.2,146.6 682.4,170.1 690.6,160.1 698.8,153.4 707.0,217.1 715.1,213.7 723.3,180.2 731.5,193.6 739.7,203.6 747.9,186.9 756.1,156.7 764.3,153.4 772.4,183.5 780.6,176.8 788.8,166.8 797.0,160.1 805.2,171.8 813.4,145.0 821.6,176.8 829.8,160.1 837.9,153.4 846.1,173.5 854.3,176.8 862.5,153.4 870.7,150.0 878.9,160.1 887.1,160.1 895.3,173.5 903.4,166.8 911.6,153.4 919.8,145.0 928.0,158.4"/>
+<text x="788.8" y="48" text-anchor="middle" fill="#4ecdc4" font-family="JetBrains Mono,monospace" font-size="10">911.3 ±250 kHz</text>
+<text x="490.0" y="16" text-anchor="middle" fill="#e8f0f8" font-family="JetBrains Mono,monospace" font-size="12">home repeater → Cougar Mountain · 902.3–913.0 MHz</text>
+<text x="490.0" y="294" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">Center frequency (MHz)</text>
+<text x="14" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(-90 14 150.0)">Delivery</text>
+<text x="968" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(90 968 150.0)">SNR</text>
+<line x1="60" y1="58" x2="76" y2="58" stroke="#4ecdc4" stroke-width="2"/>
+<text x="80" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">1 B</text>
+<line x1="150" y1="58" x2="166" y2="58" stroke="#7c9cff" stroke-width="2"/>
+<text x="170" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">128 B</text>
+<line x1="240" y1="58" x2="256" y2="58" stroke="#ff6b4a" stroke-width="2"/>
+<text x="260" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">255 B</text>
+<line x1="330" y1="58" x2="346" y2="58" stroke="#f5c542" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="350" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">median SNR</text>
+</svg>
+
+  <hr class="divider"/>
+
+  <div class="section-label">909–913 MHz</div>
+  <p class="prose">Same run, zoomed to the filter passband. Tables below cover all configs; the chart is SF8 / CR 4/7. Hops are Cougar → home and home → Cougar.</p>
+  <svg style="width:100%;height:auto;display:block;background:#151c25;border:1px solid #2a3a4e;border-radius:8px;margin:0.8rem 0 1.2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300">
+<title>Cougar Mountain → home repeater · 909–913 MHz</title>
+<rect x="500.9" y="36" width="109.5" height="228" fill="#4ecdc4" fill-opacity="0.16"/>
+<line x1="555.7" y1="36" x2="555.7" y2="264" stroke="#4ecdc4" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="52.0" y1="36" x2="52.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="52.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">909</text>
+<line x1="271.0" y1="36" x2="271.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="271.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">910</text>
+<line x1="490.0" y1="36" x2="490.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="490.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">911</text>
+<line x1="709.0" y1="36" x2="709.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="709.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">912</text>
+<line x1="928.0" y1="36" x2="928.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="928.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">913</text>
+<line x1="52" y1="264.0" x2="928" y2="264.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="267.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0%</text>
+<line x1="52" y1="218.4" x2="928" y2="218.4" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="221.4" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">20%</text>
+<line x1="52" y1="172.8" x2="928" y2="172.8" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="175.8" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">40%</text>
+<line x1="52" y1="127.2" x2="928" y2="127.2" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="130.2" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">60%</text>
+<line x1="52" y1="81.6" x2="928" y2="81.6" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="84.6" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">80%</text>
+<line x1="52" y1="36.0" x2="928" y2="36.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="39.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">100%</text>
+<text x="936" y="258.6" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-12 dB</text>
+<text x="936" y="224.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-8 dB</text>
+<text x="936" y="191.0" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-4 dB</text>
+<text x="936" y="157.2" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0 dB</text>
+<text x="936" y="123.4" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">4 dB</text>
+<text x="936" y="89.7" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">8 dB</text>
+<text x="936" y="55.9" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">12 dB</text>
+<polyline fill="none" stroke="#4ecdc4" stroke-width="1.6" points="52.0,70.2 73.9,36.0 95.8,47.4 117.7,36.0 139.6,36.0 161.5,36.0 183.4,47.4 205.3,47.4 227.2,36.0 249.1,36.0 271.0,47.4 292.9,36.0 314.8,47.4 336.7,47.4 358.6,36.0 380.5,47.4 402.4,47.4 424.3,58.8 446.2,36.0 468.1,36.0 490.0,47.4 511.9,47.4 533.8,70.2 555.7,36.0 577.6,47.4 599.5,36.0 621.4,47.4 643.3,47.4 665.2,36.0 687.1,58.8 709.0,47.4 730.9,36.0 752.8,252.6 774.7,36.0 796.6,47.4 818.5,70.2 840.4,47.4 862.3,36.0 884.2,36.0 906.1,70.2 928.0,58.8"/>
+<polyline fill="none" stroke="#7c9cff" stroke-width="1.6" points="52.0,58.8 73.9,58.8 95.8,36.0 117.7,47.4 139.6,36.0 161.5,58.8 183.4,58.8 205.3,58.8 227.2,58.8 249.1,47.4 271.0,36.0 292.9,36.0 314.8,58.8 336.7,47.4 358.6,47.4 380.5,47.4 402.4,47.4 424.3,47.4 446.2,81.6 468.1,58.8 490.0,47.4 511.9,58.8 533.8,36.0 555.7,58.8 577.6,70.2 599.5,81.6 621.4,70.2 643.3,70.2 665.2,58.8 687.1,36.0 709.0,58.8 730.9,58.8 752.8,47.4 774.7,70.2 796.6,58.8 818.5,58.8 840.4,47.4 862.3,47.4 884.2,81.6 906.1,58.8 928.0,93.0"/>
+<polyline fill="none" stroke="#ff6b4a" stroke-width="1.6" points="52.0,70.2 73.9,81.6 95.8,70.2 117.7,93.0 139.6,58.8 161.5,150.0 183.4,58.8 205.3,81.6 227.2,58.8 249.1,81.6 271.0,104.4 292.9,58.8 314.8,58.8 336.7,81.6 358.6,58.8 380.5,70.2 402.4,58.8 424.3,58.8 446.2,70.2 468.1,104.4 490.0,47.4 511.9,58.8 533.8,58.8 555.7,47.4 577.6,70.2 599.5,93.0 621.4,264.0 643.3,115.8 665.2,93.0 687.1,47.4 709.0,47.4 730.9,58.8 752.8,58.8 774.7,70.2 796.6,264.0 818.5,47.4 840.4,47.4 862.3,70.2 884.2,81.6 906.1,104.4 928.0,58.8"/>
+<polyline fill="none" stroke="#f5c542" stroke-width="2" stroke-dasharray="5 4" points="52.0,84.6 73.9,87.7 95.8,79.3 117.7,78.2 139.6,78.2 161.5,63.4 183.4,65.6 205.3,59.2 227.2,63.4 249.1,65.6 271.0,65.6 292.9,67.7 314.8,65.6 336.7,67.7 358.6,69.8 380.5,61.3 402.4,87.7 424.3,88.8 446.2,63.4 468.1,75.1 490.0,74.0 511.9,86.7 533.8,82.4 555.7,84.6 577.6,80.3 599.5,103.6 621.4,83.5 643.3,69.8 665.2,88.8 687.1,80.3 709.0,89.8 730.9,93.0 752.8,67.7 774.7,74.0 796.6,71.9 818.5,67.7 840.4,63.4 862.3,80.3 884.2,77.2 906.1,238.7 928.0,67.7"/>
+<text x="555.7" y="48" text-anchor="middle" fill="#4ecdc4" font-family="JetBrains Mono,monospace" font-size="10">911.3 ±250 kHz</text>
+<text x="490.0" y="16" text-anchor="middle" fill="#e8f0f8" font-family="JetBrains Mono,monospace" font-size="12">Cougar Mountain → home repeater · 909–913 MHz</text>
+<text x="490.0" y="294" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">Center frequency (MHz)</text>
+<text x="14" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(-90 14 150.0)">Delivery</text>
+<text x="968" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(90 968 150.0)">SNR</text>
+<line x1="60" y1="58" x2="76" y2="58" stroke="#4ecdc4" stroke-width="2"/>
+<text x="80" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">1 B</text>
+<line x1="150" y1="58" x2="166" y2="58" stroke="#7c9cff" stroke-width="2"/>
+<text x="170" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">128 B</text>
+<line x1="240" y1="58" x2="256" y2="58" stroke="#ff6b4a" stroke-width="2"/>
+<text x="260" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">255 B</text>
+<line x1="330" y1="58" x2="346" y2="58" stroke="#f5c542" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="350" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">median SNR</text>
+</svg>
+  <svg style="width:100%;height:auto;display:block;background:#151c25;border:1px solid #2a3a4e;border-radius:8px;margin:0.8rem 0 1.2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300">
+<title>home repeater → Cougar Mountain · 909–913 MHz</title>
+<rect x="500.9" y="36" width="109.5" height="228" fill="#4ecdc4" fill-opacity="0.16"/>
+<line x1="555.7" y1="36" x2="555.7" y2="264" stroke="#4ecdc4" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="52.0" y1="36" x2="52.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="52.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">909</text>
+<line x1="271.0" y1="36" x2="271.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="271.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">910</text>
+<line x1="490.0" y1="36" x2="490.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="490.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">911</text>
+<line x1="709.0" y1="36" x2="709.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="709.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">912</text>
+<line x1="928.0" y1="36" x2="928.0" y2="264" stroke="#6b7f96" stroke-opacity="0.35" stroke-width="1"/>
+<text x="928.0" y="278" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">913</text>
+<line x1="52" y1="264.0" x2="928" y2="264.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="267.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0%</text>
+<line x1="52" y1="218.4" x2="928" y2="218.4" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="221.4" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">20%</text>
+<line x1="52" y1="172.8" x2="928" y2="172.8" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="175.8" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">40%</text>
+<line x1="52" y1="127.2" x2="928" y2="127.2" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="130.2" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">60%</text>
+<line x1="52" y1="81.6" x2="928" y2="81.6" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="84.6" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">80%</text>
+<line x1="52" y1="36.0" x2="928" y2="36.0" stroke="#2a3a4e" stroke-width="1"/>
+<text x="44" y="39.0" text-anchor="end" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">100%</text>
+<text x="936" y="252.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-12 dB</text>
+<text x="936" y="195.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-8 dB</text>
+<text x="936" y="138.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">-4 dB</text>
+<text x="936" y="81.8" text-anchor="start" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">0 dB</text>
+<polyline fill="none" stroke="#4ecdc4" stroke-width="1.6" points="52.0,93.0 73.9,115.8 95.8,127.2 117.7,93.0 139.6,127.2 161.5,93.0 183.4,70.2 205.3,70.2 227.2,36.0 249.1,58.8 271.0,81.6 292.9,70.2 314.8,58.8 336.7,138.6 358.6,127.2 380.5,104.4 402.4,115.8 424.3,150.0 446.2,104.4 468.1,47.4 490.0,47.4 511.9,104.4 533.8,70.2 555.7,47.4 577.6,81.6 599.5,36.0 621.4,81.6 643.3,58.8 665.2,47.4 687.1,47.4 709.0,47.4 730.9,81.6 752.8,93.0 774.7,93.0 796.6,58.8 818.5,36.0 840.4,70.2 862.3,58.8 884.2,81.6 906.1,58.8 928.0,47.4"/>
+<polyline fill="none" stroke="#7c9cff" stroke-width="1.6" points="52.0,229.8 73.9,218.4 95.8,184.2 117.7,229.8 139.6,195.6 161.5,195.6 183.4,138.6 205.3,127.2 227.2,138.6 249.1,104.4 271.0,70.2 292.9,81.6 314.8,150.0 336.7,172.8 358.6,195.6 380.5,218.4 402.4,241.2 424.3,172.8 446.2,150.0 468.1,115.8 490.0,81.6 511.9,138.6 533.8,184.2 555.7,81.6 577.6,138.6 599.5,138.6 621.4,172.8 643.3,207.0 665.2,150.0 687.1,161.4 709.0,93.0 730.9,150.0 752.8,127.2 774.7,161.4 796.6,161.4 818.5,138.6 840.4,161.4 862.3,104.4 884.2,161.4 906.1,184.2 928.0,241.2"/>
+<polyline fill="none" stroke="#ff6b4a" stroke-width="1.6" points="52.0,241.2 73.9,241.2 95.8,229.8 117.7,229.8 139.6,241.2 161.5,229.8 183.4,241.2 205.3,172.8 227.2,161.4 249.1,195.6 271.0,172.8 292.9,127.2 314.8,184.2 336.7,229.8 358.6,138.6 380.5,172.8 402.4,252.6 424.3,207.0 446.2,195.6 468.1,172.8 490.0,150.0 511.9,150.0 533.8,207.0 555.7,150.0 577.6,161.4 599.5,161.4 621.4,264.0 643.3,207.0 665.2,207.0 687.1,207.0 709.0,195.6 730.9,195.6 752.8,172.8 774.7,172.8 796.6,195.6 818.5,138.6 840.4,172.8 862.3,195.6 884.2,195.6 906.1,207.0 928.0,184.2"/>
+<polyline fill="none" stroke="#f5c542" stroke-width="2" stroke-dasharray="5 4" points="52.0,214.1 73.9,214.1 95.8,185.6 117.7,196.3 139.6,199.9 161.5,171.4 183.4,185.6 205.3,187.4 227.2,194.5 249.1,153.6 271.0,178.5 292.9,167.8 314.8,160.7 336.7,228.4 358.6,224.8 380.5,189.2 402.4,203.4 424.3,214.1 446.2,196.3 468.1,164.2 490.0,160.7 511.9,192.8 533.8,185.6 555.7,174.9 577.6,167.8 599.5,180.3 621.4,151.8 643.3,185.6 665.2,167.8 687.1,160.7 709.0,182.1 730.9,185.6 752.8,160.7 774.7,157.1 796.6,167.8 818.5,167.8 840.4,182.1 862.3,174.9 884.2,160.7 906.1,151.8 928.0,166.0"/>
+<text x="555.7" y="48" text-anchor="middle" fill="#4ecdc4" font-family="JetBrains Mono,monospace" font-size="10">911.3 ±250 kHz</text>
+<text x="490.0" y="16" text-anchor="middle" fill="#e8f0f8" font-family="JetBrains Mono,monospace" font-size="12">home repeater → Cougar Mountain · 909–913 MHz</text>
+<text x="490.0" y="294" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10">Center frequency (MHz)</text>
+<text x="14" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(-90 14 150.0)">Delivery</text>
+<text x="968" y="150.0" text-anchor="middle" fill="#6b7f96" font-family="JetBrains Mono,monospace" font-size="10" transform="rotate(90 968 150.0)">SNR</text>
+<line x1="60" y1="58" x2="76" y2="58" stroke="#4ecdc4" stroke-width="2"/>
+<text x="80" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">1 B</text>
+<line x1="150" y1="58" x2="166" y2="58" stroke="#7c9cff" stroke-width="2"/>
+<text x="170" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">128 B</text>
+<line x1="240" y1="58" x2="256" y2="58" stroke="#ff6b4a" stroke-width="2"/>
+<text x="260" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">255 B</text>
+<line x1="330" y1="58" x2="346" y2="58" stroke="#f5c542" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="350" y="61" fill="#c8d6e5" font-family="JetBrains Mono,monospace" font-size="10">median SNR</text>
+</svg>
+
+  <table class="bom-table">
+    <thead>
+      <tr>
+        <th>Config</th>
+        <th>Hop</th>
+        <th>1 B</th>
+        <th>128 B</th>
+        <th>255 B</th>
+        <th>Median SNR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="part-name">SF7 CR 4/5 · 500 kHz</td><td>Cougar → home</td><td>82%</td><td>70%</td><td>52%</td><td>+10.8 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>68%</td><td>30%</td><td>10%</td><td>−5.2 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/5 · 500 kHz</td><td>Cougar → home</td><td>97%</td><td>90%</td><td>79%</td><td>+9.5 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>85%</td><td>49%</td><td>30%</td><td>−6.0 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/7 · 500 kHz</td><td>Cougar → home</td><td>94%</td><td>91%</td><td>80%</td><td>+9.5 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>81%</td><td>47%</td><td>31%</td><td>−7.2 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/8 · 500 kHz · 910–912</td><td>Cougar → home</td><td>98%</td><td>93%</td><td>88%</td><td>+10.2 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>86%</td><td>63%</td><td>41%</td><td>−7.0 dB</td></tr>
+      <tr><td class="part-name">SF7 CR 4/5 · 62.5 kHz · 909–910</td><td>Cougar → home</td><td>99%</td><td>88%</td><td>95%</td><td>+11.8 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>90%</td><td>69%</td><td>56%</td><td>+7.2 dB</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">SF7 at 500 kHz is the same SF as the 62.5 kHz mesh. On this path it is not enough, especially home → Cougar at 255 bytes (10%). SF8 recovered most of that (30% on that hop, 79% Cougar → home). CR 4/7 vs 4/5 barely moved the 909–913 averages. CR 4/8 on 910–912 was a bit better on 128-byte home → Cougar (63% vs ~47–49%).</p>
+  <p class="prose">The 62.5 kHz run is the same two sites around 909–910 MHz. Home → Cougar median SNR is +7.2 dB there vs about −6 dB at 500 kHz. The path works. 500 kHz is just harder.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">SF vs CR</div>
+  <p class="prose">SF7 → SF8 at CR 4/5, 909–913 MHz: Cougar → home 255-byte delivery 52% → 79%. Home → Cougar 10% → 30%.</p>
+  <p class="prose">SF8 CR 4/5 → 4/7, same window: 255-byte averages 79% → 80% and 30% → 31%. At 911.3 MHz specifically, home → Cougar 128-byte went 50% → 80%, 255-byte 40% → 50%.</p>
+  <p class="prose">SF matters more than CR. CR can still help, mostly on the weak hop.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">What we already knew</div>
+
+  <div class="objection-card">
+    <div class="q">Long messages are less reliable</div>
+    <div class="a">A 255-byte frame spends longer on the air than a 1-byte probe, so it overlaps more of whatever else is in the band. We already knew that. The useful number is how far the rates come apart on this path.<br/><br/>
+    SF8 / CR 4/7 / 500 kHz, 909–913 MHz: Cougar → home 1-byte 94%, 255-byte 80%. Home → Cougar 1-byte 81%, 255-byte <strong>31%</strong>. A 1-byte test will tell you the link exists. It will not tell you whether a real MeshCore payload gets through. The size of that gap was the surprise. Don’t use 1-byte delivery as a stand-in for traffic.</div>
+  </div>
+
+  <div class="objection-card">
+    <div class="q">Cougar transmits stronger than it receives</div>
+    <div class="a">Cougar Mountain is much better at being heard than at hearing. On the 500 kHz runs, Cougar → home median SNR is about +9 to +11 dB. Home → Cougar is about −6 to −7 dB.<br/><br/>
+    That’s the site: other 900 MHz users, and in this area utility meters hopping on a 300 kHz grid. At 62.5 kHz those hops show up as individual dead 100 kHz steps on the uplink. At 500 kHz they’re always in the passband somewhere, so you don’t get a clean comb — you get a worse noise floor. Parking on a different 100 kHz step does not fix Cougar’s receive.</div>
+  </div>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Why 911.3 MHz</div>
+  <p class="prose">Nothing in 909–913 was uniquely clean. On SF8 / CR 4/7, 911.3 is one of several Cougar → home centers around 90% on all three sizes. Home → Cougar: 1-byte 95%, 128-byte 80%, 255-byte 50%, median SNR about −7 dB. 911.0–911.5 looks similar.</p>
+  <p class="prose">We picked it because:</p>
+  <ul class="prose" style="padding-left: 1.4rem; margin-bottom: 1.5rem;">
+    <li>It is inside 909–913 MHz, which is what most of these filters pass.</li>
+    <li>At SF8, short packets were reliable Cougar → home and still usable home → Cougar, with the home end being a typical 27 dBm / 9 dBi station.</li>
+    <li>CR 4/7 helped this center on the weak hop more than it helped the window average.</li>
+    <li>It lands on the same 300 kHz family as the meters. Don’t use 911.3 at 62.5 kHz. At 500 kHz that hop is in the channel anyway, so it isn’t a reason to avoid it.</li>
+  </ul>
+  <p class="prose">We’re using 911.3 MHz for the next 500 kHz tests. Not because the band is quiet there. Because it was acceptable, and it fits the filters.</p>
+
+  <table class="bom-table">
+    <thead>
+      <tr>
+        <th>911.3 MHz</th>
+        <th>Hop</th>
+        <th>1 B</th>
+        <th>128 B</th>
+        <th>255 B</th>
+        <th>Median SNR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="part-name">SF7 CR 4/5 · 500 kHz</td><td>Cougar → home</td><td>70%</td><td>95%</td><td>20%</td><td>+9.8 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>100%</td><td>60%</td><td>35%</td><td>−3.8 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/5 · 500 kHz</td><td>Cougar → home</td><td>100%</td><td>85%</td><td>90%</td><td>+9.5 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>95%</td><td>50%</td><td>40%</td><td>−5.8 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/7 · 500 kHz</td><td>Cougar → home</td><td>100%</td><td>90%</td><td>95%</td><td>+8.2 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>95%</td><td>80%</td><td>50%</td><td>−6.8 dB</td></tr>
+      <tr><td class="part-name">SF8 CR 4/8 · 500 kHz</td><td>Cougar → home</td><td>100%</td><td>95%</td><td>90%</td><td>+8.8 dB</td></tr>
+      <tr><td></td><td>home → Cougar</td><td>95%</td><td>75%</td><td>45%</td><td>−8.2 dB</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">SF7 at 911.3 still has 20% delivery on 255-byte Cougar → home. If the next test is SF7 / 500 kHz, this frequency won’t paper over that. If it’s SF8 / 500 kHz, it’s a reasonable place to sit.</p>
+
+  <hr class="divider"/>
+
+  <div class="section-label">Next</div>
+  <p class="prose">Next 500 kHz work stays on 911.3 MHz. Include a long frame, not just 1-byte. Treat home → Cougar as the limit. Prefer SF8; use CR as a trim. Don’t copy 911.3 onto 62.5 kHz because of the meter grid.</p>
+  <p class="prose">The <a href="meshcore-500-test.html">910.1 / 500 mesh test</a> is still the coverage/density writeup. This is only which frequency to use.</p>
+
+  <hr class="divider"/>
+
+  <p class="prose" style="color: var(--text-dim); font-size: 0.85rem;">Software: <a href="https://github.com/Cisien/meshcore-snr-sweep">github.com/Cisien/meshcore-snr-sweep</a>.</p>
